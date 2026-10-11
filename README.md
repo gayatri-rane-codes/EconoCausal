@@ -17,8 +17,11 @@ Unlike conventional predictive machine learning models that predict correlation 
 - **Phase 3 (Week 3)**: Prescriptive optimization via SciPy and discount allocation matrix generation.
 - **Phase 4 (Week 4)**: FastAPI integration, data drift detection, end-to-end testing, and review deliverables.
 
-## Development Status
-- **Current Phase**: Phase 1 — Day 1 completed.
-- **Environment**: Python 3.11 (virtual environment configured), Node.js v24.19.0, npm 11.17.0, Git version control.
+## Development Status & Setup
+- **Current Phase**: Phase 1 — Day 2 completed.
+- **Environment**: Python 3.11.9 (active virtual environment \.venv\), Node.js v24.19.0, npm 11.17.0, Git version control.
+- **Core Installed Packages**: pandas, numpy, dowhy (v0.14), matplotlib.
 - **Working Branch**: gayatri
-- **Dataset & Model Status**: Candidate dataset selection and causal DAG construction pending Day 2+ implementation.
+- **Project Structure**: Established modular layout (\src/\, \data/\, \docs/\, \
+otebooks/\).
+- **Dataset & Model Status**: Candidate dataset selection and causal DAG construction scheduled for Day 3+.
