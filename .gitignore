@@ -27,3 +27,7 @@ data/*.csv
 !data/sample_data.csv
 reports/*.png
 reports/*.html
+
+# Data files
+data/**/*.csv
+*.csv
