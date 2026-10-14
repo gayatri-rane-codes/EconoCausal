@@ -1,0 +1,22 @@
+digraph {
+cart_abandonment_rate -> treatment_arm;
+cart_abandonment_rate -> purchased;
+previous_discount_response_rate -> treatment_arm;
+previous_discount_response_rate -> purchased;
+historical_spend -> treatment_arm;
+historical_spend -> purchased;
+recency_days -> treatment_arm;
+recency_days -> purchased;
+browsing_frequency -> treatment_arm;
+browsing_frequency -> purchased;
+loyalty_member -> treatment_arm;
+loyalty_member -> purchased;
+competitor_price_index -> treatment_arm;
+competitor_price_index -> purchased;
+seasonality_index -> treatment_arm;
+seasonality_index -> purchased;
+age -> purchased;
+income_bracket -> historical_spend;
+income_bracket -> purchased;
+treatment_arm -> purchased;
+}
