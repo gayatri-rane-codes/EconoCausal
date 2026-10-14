@@ -15,8 +15,5 @@ competitor_price_index -> treatment_arm;
 competitor_price_index -> purchased;
 seasonality_index -> treatment_arm;
 seasonality_index -> purchased;
-age -> purchased;
-income_bracket -> historical_spend;
-income_bracket -> purchased;
 treatment_arm -> purchased;
 }

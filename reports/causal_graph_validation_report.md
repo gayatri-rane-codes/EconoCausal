@@ -27,7 +27,7 @@ This report formalizes and validates the Directed Acyclic Graph (DAG) for the Ec
 
 ## 3. Causal Identification via DoWhy
 
-* **Graph Topography**: 12 nodes, 20 directed edges.
+* **Graph Topography**: 10 nodes, 17 directed edges.
 * **Acyclicity Check**: Verified acyclic using NetworkX (`nx.is_directed_acyclic_graph == True`).
 * **Identification Strategy**: Backdoor Criterion.
 * **Estimand Expression**:
