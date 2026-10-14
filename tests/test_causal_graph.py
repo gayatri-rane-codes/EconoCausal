@@ -10,7 +10,7 @@ class TestCausalGraphValidation(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.data_path = "data/raw/econocausal_synthetic_dataset.csv"
-        cls.df = pd.read_csv(cls.data_path, nrows=50)
+        cls.df = pd.read_csv(cls.data_path)
         cls.dot_graph = get_causal_graph_dot()
         cls.model, cls.estimand = build_and_identify(data_path=cls.data_path)
 
@@ -23,6 +23,15 @@ class TestCausalGraphValidation(unittest.TestCase):
         """Verify treatment and outcome columns exist in the raw dataset."""
         self.assertIn("treatment_arm", self.df.columns)
         self.assertIn("purchased", self.df.columns)
+
+    def test_four_treatment_discount_arms_exist(self):
+        """Verify all 4 discount levels (0%, 5%, 10%, 20%) exist without binary reduction."""
+        unique_arms = set(self.df["treatment_arm"].unique())
+        self.assertEqual(unique_arms, {0, 1, 2, 3}, f"Expected arms {{0, 1, 2, 3}}, got {unique_arms}")
+        
+        if "discount_rate" in self.df.columns:
+            unique_rates = set(self.df["discount_rate"].round(2).unique())
+            self.assertEqual(unique_rates, {0.00, 0.05, 0.10, 0.20})
 
     def test_confounders_exist_in_dataset(self):
         """Verify all 8 identified backdoor confounders exist in the raw dataset."""
@@ -51,7 +60,7 @@ class TestCausalGraphValidation(unittest.TestCase):
         self.assertEqual(len(intersection), 0, f"Prohibited variables found: {intersection}")
 
     def test_dowhy_identification_successful(self):
-        """Verify DoWhy successfully computes backdoor estimand without errors."""
+        """Verify DoWhy successfully computes backdoor estimand with exactly 8 variables."""
         backdoor_vars = self.estimand.get_backdoor_variables()
         self.assertEqual(len(backdoor_vars), 8)
 
