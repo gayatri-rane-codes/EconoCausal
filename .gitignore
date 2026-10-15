@@ -31,3 +31,4 @@ reports/*.html
 # Data files
 data/**/*.csv
 *.csv
+frontend/dist/
