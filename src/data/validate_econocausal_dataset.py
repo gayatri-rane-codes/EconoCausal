@@ -652,7 +652,7 @@ def main():
     out.append("- Passing checks confirms the dataset behaves as the documented DGP specifies; it says nothing about real customers.\n"
                "- The DR/DML-style, PSM, Qini and LP results come from scikit-learn/SciPy code written for this validation; DoWhy and EconML were not run (see top).\n"
                "- Estimator recovery thresholds are sanity bounds chosen for this sample size, not formal statistical tests.\n")
-    with open(a.report, "w") as fh:
+    with open(a.report, "w", encoding="utf-8") as fh:
         fh.write("\n".join(out) + "\n")
     print(f"{n_pass}/{len(checks)} checks passed; report -> {a.report}")
     for s, nme, ok, d in checks:

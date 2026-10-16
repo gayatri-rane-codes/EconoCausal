@@ -1,6 +1,6 @@
 # Dataset Validation Report — EconoCausal (Dynamic Pricing via DML)
 
-All numbers below were computed by `validate_econocausal_dataset.py` from the files on disk (`econocausal_synthetic_dataset.csv`, `ground_truth_evaluation.csv`); runtime 29s. Findings validate the **simulation assumptions** of a synthetic data-generating process, not real-world causal truth.
+All numbers below were computed by `validate_econocausal_dataset.py` from the files on disk (`econocausal_synthetic_dataset.csv`, `ground_truth_evaluation.csv`); runtime 49s. Findings validate the **simulation assumptions** of a synthetic data-generating process, not real-world causal truth.
 
 **Result: 68/68 checks passed.**
 
