@@ -131,3 +131,5 @@ When initiating Phase 2 (Causal Estimation with EconML & DoWhy):
 - [ ] **Heterogeneity Features ($X$)**: Key customer dimensions for CATE estimation (`historical_spend`, `browsing_frequency`, `cart_abandonment_rate`, etc.).
 - [ ] **Estimator Implementation**: Scaffold Double Machine Learning (`LinearDML` / `CausalForestDML`) using EconML in `src/causal/estimators.py`.
 - [ ] **Evaluation Against Oracle Ground Truth**: Benchmark estimated CATE against `data/raw/ground_truth_evaluation.csv`.
+
+<!-- Phase 1 Day 7 Verification Sign-off: 2026-10-16 17:43:08 IST -->
