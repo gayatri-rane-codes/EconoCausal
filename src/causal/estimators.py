@@ -1,6 +1,7 @@
 ﻿"""
 Estimator module for CATE estimation using Double Machine Learning (LinearDML).
 Handles multi-arm discrete treatments (0%, 5%, 10%, 20% discounts) and binary purchase outcomes.
+Includes StandardScaler pipeline in nuisance model_t to ensure stable convergence.
 """
 
 from typing import Dict, List, Optional, Tuple, Union
@@ -8,6 +9,8 @@ import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import LogisticRegression
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
 from econml.dml import LinearDML
 
 
@@ -64,9 +67,13 @@ class CausalDMLEstimator:
             random_state=self.random_state,
             n_jobs=-1,
         )
-        self.model_t = LogisticRegression(
-            max_iter=1000,
-            random_state=self.random_state,
+        # Scaled pipeline ensures stable L-BFGS gradient convergence without cross-fold leakage
+        self.model_t = make_pipeline(
+            StandardScaler(),
+            LogisticRegression(
+                max_iter=1000,
+                random_state=self.random_state,
+            )
         )
 
         self.estimator = LinearDML(
