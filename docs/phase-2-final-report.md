@@ -69,3 +69,5 @@ Raw Dataset (20,000 rows)
 
 ## 7. Recommended Next Steps (Phase 3)
 Begin Phase 3, Day 1 by designing the **Constrained Optimization Formulation** (`src/optimization/budget.py`) using `scipy.optimize.linprog` or `milp` to maximize overall campaign net profit subject to hard operational budget ceilings.
+
+<!-- Verified: Phase 2 complete -->
