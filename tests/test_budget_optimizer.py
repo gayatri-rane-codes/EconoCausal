@@ -1,4 +1,5 @@
 ﻿import unittest
+from unittest.mock import patch, MagicMock
 import numpy as np
 import pandas as pd
 import itertools
@@ -7,7 +8,6 @@ from src.optimization.budget import (
     optimize_greedy_allocation,
     build_candidate_matrix,
 )
-from src.causal.policy import compute_candidate_policy_table
 
 
 class TestBudgetOptimizer(unittest.TestCase):
@@ -29,6 +29,8 @@ class TestBudgetOptimizer(unittest.TestCase):
     def test_small_hand_calculated_optimal_assignment(self):
         res = optimize_budget_allocation(self.profit_df, self.cost_df, budget=15.0)
         self.assertEqual(res["status"], "success")
+        self.assertTrue(res["is_optimal_proven"])
+        self.assertTrue(res["is_feasible"])
         self.assertLessEqual(res["total_budget_spent"], 15.0)
         self.assertEqual(sum(res["arm_counts"].values()), 3)
         self.assertAlmostEqual(res["total_expected_incremental_profit"], 23.0, places=2)
@@ -69,6 +71,89 @@ class TestBudgetOptimizer(unittest.TestCase):
         self.assertAlmostEqual(milp_res["total_expected_incremental_profit"], 18.0, places=2)
         self.assertAlmostEqual(greedy_res["total_expected_incremental_profit"], 10.0, places=2)
         self.assertGreater(milp_res["total_expected_incremental_profit"], greedy_res["total_expected_incremental_profit"])
+        self.assertFalse(greedy_res["is_optimal_proven"])
+
+    def test_configurable_mip_rel_gap_supported(self):
+        res = optimize_budget_allocation(self.profit_df, self.cost_df, budget=15.0, mip_rel_gap=0.01)
+        self.assertTrue(res["is_feasible"])
+        self.assertIn(res["status"], ["success", "feasible_suboptimal"])
+        self.assertEqual(res["method"], "milp_bounded_gap")
+
+    def test_configurable_time_limit_supported(self):
+        res = optimize_budget_allocation(self.profit_df, self.cost_df, budget=15.0, time_limit=10.0)
+        self.assertTrue(res["is_feasible"])
+        self.assertEqual(res["method"], "milp_time_limited")
+
+    def test_invalid_solver_options_raise_value_error(self):
+        with self.assertRaises(ValueError):
+            optimize_budget_allocation(self.profit_df, self.cost_df, budget=15.0, mip_rel_gap=-0.05)
+        with self.assertRaises(ValueError):
+            optimize_budget_allocation(self.profit_df, self.cost_df, budget=15.0, mip_rel_gap=np.nan)
+        with self.assertRaises(ValueError):
+            optimize_budget_allocation(self.profit_df, self.cost_df, budget=15.0, time_limit=-1.0)
+        with self.assertRaises(ValueError):
+            optimize_budget_allocation(self.profit_df, self.cost_df, budget=15.0, time_limit=0.0)
+
+    def test_safe_greedy_fallback_on_simulated_solver_failure(self):
+        with patch("src.optimization.budget.milp") as mock_milp:
+            mock_res = MagicMock()
+            mock_res.success = False
+            mock_res.status = 1
+            mock_res.message = "Time limit exceeded; no feasible solution found."
+            mock_res.x = None
+            mock_milp.return_value = mock_res
+
+            res = optimize_budget_allocation(
+                self.profit_df, self.cost_df, budget=15.0, allow_greedy_fallback=True
+            )
+            self.assertEqual(res["method"], "greedy_fallback")
+            self.assertTrue(res["is_feasible"])
+            self.assertFalse(res["is_optimal_proven"])
+            self.assertLessEqual(res["total_budget_spent"], 15.0)
+
+    def test_infeasible_status_handling(self):
+        with patch("src.optimization.budget.milp") as mock_milp:
+            mock_res = MagicMock()
+            mock_res.success = False
+            mock_res.status = 2
+            mock_res.message = "The problem is infeasible."
+            mock_res.x = None
+            mock_milp.return_value = mock_res
+
+            res = optimize_budget_allocation(self.profit_df, self.cost_df, budget=15.0)
+            self.assertEqual(res["status"], "infeasible")
+            self.assertFalse(res["is_feasible"])
+            self.assertFalse(res["is_optimal_proven"])
+
+    def test_invalid_partial_solution_not_reported_as_success(self):
+        with patch("src.optimization.budget.milp") as mock_milp:
+            mock_res = MagicMock()
+            mock_res.success = False
+            mock_res.status = 1
+            mock_res.message = "Early stop"
+            # Return fractional/invalid vector where sum of arms != 1
+            mock_res.x = np.array([0.5, 0.2, 0.0, 0.0] * 3)
+            mock_milp.return_value = mock_res
+
+            res = optimize_budget_allocation(self.profit_df, self.cost_df, budget=15.0)
+            self.assertFalse(res["is_feasible"])
+            self.assertFalse(res["is_optimal_proven"])
+            self.assertIn("fallback", res["status"])
+
+    def test_greedy_fallback_failure_raises_runtime_error(self):
+        with patch("src.optimization.budget.milp") as mock_milp, \
+             patch("src.optimization.budget.optimize_greedy_allocation") as mock_greedy:
+            mock_res = MagicMock()
+            mock_res.success = False
+            mock_res.status = 1
+            mock_res.x = None
+            mock_milp.return_value = mock_res
+
+            # Mock greedy returning an invalid state
+            mock_greedy.return_value = {"is_feasible": False, "total_budget_spent": 999.0, "arm_counts": {}}
+
+            with self.assertRaises(RuntimeError):
+                optimize_budget_allocation(self.profit_df, self.cost_df, budget=15.0, allow_greedy_fallback=True)
 
     def test_budget_enforcement_and_remaining(self):
         res = optimize_budget_allocation(self.profit_df, self.cost_df, budget=12.0)
@@ -92,6 +177,7 @@ class TestBudgetOptimizer(unittest.TestCase):
         self.assertEqual(res["total_budget_spent"], 0.0)
         self.assertEqual(res["total_expected_incremental_profit"], 0.0)
         self.assertEqual(res["arm_counts"][0], 3)
+        self.assertTrue(res["is_optimal_proven"])
 
         gres = optimize_greedy_allocation(self.profit_df, self.cost_df, budget=0.0)
         self.assertEqual(gres["status"], "success")
@@ -131,7 +217,7 @@ class TestBudgetOptimizer(unittest.TestCase):
         self.assertAlmostEqual(res["budget_remaining"], 90.0, places=2)
         self.assertEqual(res["allocation"].loc["cust_only_1", "assigned_arm"], 1)
 
-    def test_empty_candidate_matrix_raises_or_handles(self):
+    def test_empty_candidate_matrix_raises_error(self):
         empty_p = pd.DataFrame(columns=["arm_0", "arm_1", "arm_2", "arm_3"])
         empty_c = pd.DataFrame(columns=["arm_0", "arm_1", "arm_2", "arm_3"])
         with self.assertRaises(ValueError):
