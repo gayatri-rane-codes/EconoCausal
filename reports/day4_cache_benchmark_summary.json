@@ -1,0 +1,10 @@
+{
+  "cohort_size": 500,
+  "budget": 1000.0,
+  "mode": "bounded_gap",
+  "cold_cache_latency_ms": 35.477,
+  "warm_cache_latency_ms": 0.0,
+  "speedup_factor": 35476923.0,
+  "cache_hits": 1,
+  "cache_misses": 1
+}
