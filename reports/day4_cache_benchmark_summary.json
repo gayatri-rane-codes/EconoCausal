@@ -2,27 +2,27 @@
   "benchmarks": [
     {
       "scenario": "cold_cache_miss",
-      "latency_ms": 48.374,
+      "latency_ms": 83.488,
       "cache_hit": false
     },
     {
       "scenario": "warm_cache_hit",
-      "latency_ms": 17.762,
+      "latency_ms": 10.443,
       "cache_hit": true
     },
     {
       "scenario": "different_cohort_miss",
-      "latency_ms": 37.863,
+      "latency_ms": 56.626,
       "cache_hit": false
     },
     {
       "scenario": "different_mode_miss",
-      "latency_ms": 22.396,
+      "latency_ms": 26.273,
       "cache_hit": false
     },
     {
       "scenario": "evicted_recomputation_miss",
-      "latency_ms": 38.42,
+      "latency_ms": 53.783,
       "cache_hit": false
     }
   ],
