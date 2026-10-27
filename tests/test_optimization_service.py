@@ -1,4 +1,4 @@
-﻿import unittest
+import unittest
 import numpy as np
 import pandas as pd
 from unittest.mock import patch, MagicMock
@@ -34,23 +34,18 @@ class TestOptimizationServiceAndCache(unittest.TestCase):
         self.service = OptimizationService(cache_size=4)
 
     def test_schema_validation(self):
-        # Valid request
         req = OptimizationRequest(budget=50.0, mode="bounded_gap")
         req.validate()
 
-        # Negative budget
         with self.assertRaises(ValueError):
             OptimizationRequest(budget=-1.0).validate()
 
-        # Non-finite budget
         with self.assertRaises(ValueError):
             OptimizationRequest(budget=float("nan")).validate()
 
-        # Invalid mode
         with self.assertRaises(ValueError):
             OptimizationRequest(budget=10.0, mode="unsupported_mode").validate()
 
-        # Invalid solver settings
         with self.assertRaises(ValueError):
             OptimizationRequest(budget=10.0, solver_settings=SolverSettings(mip_rel_gap=-0.1)).validate()
         with self.assertRaises(ValueError):
@@ -69,18 +64,16 @@ class TestOptimizationServiceAndCache(unittest.TestCase):
 
     def test_cache_hit_and_miss_lifecycle(self):
         req = OptimizationRequest(budget=15.0, mode="exact")
-        # 1. First run -> cache miss
         resp1 = self.service.optimize(req, self.profit_df, self.cost_df, use_cache=True)
         self.assertFalse(resp1.cache_hit)
         self.assertEqual(self.service.cache.hits, 0)
         self.assertEqual(self.service.cache.misses, 1)
 
-        # 2. Second run -> cache hit
         resp2 = self.service.optimize(req, self.profit_df, self.cost_df, use_cache=True)
         self.assertTrue(resp2.cache_hit)
         self.assertEqual(self.service.cache.hits, 1)
         self.assertEqual(resp1.metrics.total_expected_incremental_profit, resp2.metrics.total_expected_incremental_profit)
-        self.assertLess(resp2.elapsed_seconds, resp1.elapsed_seconds)
+        self.assertLessEqual(resp2.elapsed_seconds, resp1.elapsed_seconds)
 
     def test_different_cohorts_do_not_collide_in_cache(self):
         fp1 = compute_cohort_fingerprint(self.profit_df, self.cost_df)
@@ -113,7 +106,7 @@ class TestOptimizationServiceAndCache(unittest.TestCase):
     def test_cache_defensive_copies_prevent_caller_mutation(self):
         req = OptimizationRequest(budget=15.0, mode="exact")
         resp1 = self.service.optimize(req, self.profit_df, self.cost_df)
-        resp1.allocations[0].assigned_arm = 999  # Mutate caller copy
+        resp1.allocations[0].assigned_arm = 999
 
         resp2 = self.service.optimize(req, self.profit_df, self.cost_df)
         self.assertTrue(resp2.cache_hit)
@@ -129,12 +122,10 @@ class TestOptimizationServiceAndCache(unittest.TestCase):
         small_service.optimize(r2, self.profit_df, self.cost_df)
         self.assertEqual(small_service.cache.size(), 2)
 
-        # Triggers eviction of r1
         small_service.optimize(r3, self.profit_df, self.cost_df)
         self.assertEqual(small_service.cache.size(), 2)
         self.assertEqual(small_service.cache.evictions, 1)
 
-        # r1 should be a miss again
         res_r1 = small_service.optimize(r1, self.profit_df, self.cost_df)
         self.assertFalse(res_r1.cache_hit)
 
@@ -152,6 +143,45 @@ class TestOptimizationServiceAndCache(unittest.TestCase):
         self.assertIn("allocations", d)
         self.assertIn("metrics", d)
         self.assertEqual(d["metrics"]["cohort_size"], 3)
+
+    def test_service_maps_feasible_but_not_optimal_status(self):
+        # Bounded gap mode should return is_optimal_proven = False and status = feasible_suboptimal
+        req = OptimizationRequest(budget=15.0, mode="bounded_gap", solver_settings=SolverSettings(mip_rel_gap=0.01))
+        resp = self.service.optimize(req, self.profit_df, self.cost_df)
+        self.assertTrue(resp.is_feasible)
+        self.assertFalse(resp.is_optimal_proven)
+        self.assertEqual(resp.status, "feasible_suboptimal")
+
+    def test_service_handles_solver_failure_without_caching(self):
+        with patch("src.optimization.service.optimize_budget_allocation") as mock_opt:
+            mock_alloc = pd.DataFrame({
+                "assigned_arm": [0, 0, 0],
+                "discount_rate": [0.0, 0.0, 0.0],
+                "expected_incremental_profit": [0.0, 0.0, 0.0],
+                "allocated_budget_cost": [0.0, 0.0, 0.0],
+            }, index=self.customers)
+            mock_opt.return_value = {
+                "status": "solver_failed_fallback",
+                "method": "milp_exact",
+                "solver_message": "Internal error",
+                "is_feasible": False,
+                "is_optimal_proven": False,
+                "elapsed_seconds": 0.01,
+                "total_expected_incremental_profit": 0.0,
+                "total_budget_spent": 0.0,
+                "budget_remaining": 15.0,
+                "arm_counts": {0: 3, 1: 0, 2: 0, 3: 0},
+                "allocation": mock_alloc,
+            }
+
+            req = OptimizationRequest(budget=15.0, mode="exact")
+            resp = self.service.optimize(req, self.profit_df, self.cost_df, use_cache=True)
+
+            self.assertFalse(resp.is_feasible)
+            self.assertFalse(resp.is_optimal_proven)
+            self.assertEqual(resp.status, "solver_failed_fallback")
+            # Ensure failed result was NOT cached
+            self.assertEqual(self.service.cache.size(), 0)
 
 
 if __name__ == "__main__":

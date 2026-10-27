@@ -1,10 +1,11 @@
 ﻿"""
-Phase 3 Day 4: Optimization Service and Cache Performance Benchmark.
-Evaluates:
-  1. Cold-cache miss latency (running bounded-gap optimization)
-  2. Warm-cache hit latency (reusing exact-key cached solution)
-  3. Cohort fingerprint collision resistance
-  4. Cache eviction and LRU memory bounding
+Phase 3 Day 4: Comprehensive Optimization Service and Cache Benchmark.
+Evaluates all required scenarios from Prompt Section 5:
+  1. First request with a cache miss (Cold Cache)
+  2. Repeated identical request with a cache hit (Warm Cache)
+  3. Same budget but different candidate cohort (Cohort miss / non-collision)
+  4. Same cohort but different solver mode or settings (Mode miss / non-collision)
+  5. Cache eviction and subsequent recomputation
 """
 
 import os
@@ -17,75 +18,90 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 
 from src.optimization.schemas import OptimizationRequest, SolverSettings
 from src.optimization.service import OptimizationService
+from src.causal.estimators import CausalDMLEstimator
+from src.causal.policy import compute_candidate_policy_table
 
 RANDOM_SEED = 20261024
 
 
 def run_cache_benchmarks():
     print("=" * 75)
-    print("ECONOCAUSAL PHASE 3 DAY 4: OPTIMIZATION SERVICE & CACHE BENCHMARK")
+    print("ECONOCAUSAL PHASE 3 DAY 4: COMPREHENSIVE SERVICE & CACHE BENCHMARK")
     print("=" * 75)
 
     data_path = os.path.join("data", "raw", "econocausal_synthetic_dataset.csv")
     df = pd.read_csv(data_path)
-    
-    # Use a 500-customer cohort for quick and rigorous service verification
-    sample_df = df.iloc[:500].copy()
-    
-    # Build candidate matrices
-    from src.causal.estimators import CausalDMLEstimator
-    from src.causal.policy import compute_candidate_policy_table
 
-    print("Fitting CATE estimator on subset...")
+    # Prepare two distinct cohorts for comparison
+    cohort_A = df.iloc[:500].copy()
+    cohort_B = df.iloc[500:1000].copy()
+
     estimator = CausalDMLEstimator(random_state=RANDOM_SEED, cv=2)
-    estimator.fit(sample_df)
-    cate_df = estimator.estimate_effects(sample_df)
-    
-    p_mat, c_mat = compute_candidate_policy_table(
-        cate_df=cate_df,
-        econ_df=sample_df,
-        spend_tail_threshold=60000.0,
-        default_baseline_prob=0.23,
-    )
+    estimator.fit(cohort_A)
+    cate_A = estimator.estimate_effects(cohort_A)
+    p_mat_A, c_mat_A = compute_candidate_policy_table(cate_A, cohort_A, 60000.0, 0.23)
 
-    service = OptimizationService(cache_size=4)
-    req = OptimizationRequest(
-        budget=1000.0,
-        mode="bounded_gap",
-        solver_settings=SolverSettings(mip_rel_gap=0.005),
-    )
+    cate_B = estimator.estimate_effects(cohort_B)
+    p_mat_B, c_mat_B = compute_candidate_policy_table(cate_B, cohort_B, 60000.0, 0.23)
 
-    # 1. Cold Cache Miss
+    # Use small capacity cache to test eviction
+    service = OptimizationService(cache_size=2)
+
+    results = []
+
+    # Scenario 1: First request with a cache miss
+    req_base = OptimizationRequest(budget=1000.0, mode="bounded_gap", solver_settings=SolverSettings(mip_rel_gap=0.005))
     t0 = time.time()
-    resp_cold = service.optimize(req, p_mat, c_mat, use_cache=True)
-    cold_time = time.time() - t0
-    print(f"Cold Cache Request : Time = {cold_time*1000:.2f} ms | Cache Hit = {resp_cold.cache_hit} | Profit = ${resp_cold.metrics.total_expected_incremental_profit:.2f}")
+    resp1 = service.optimize(req_base, p_mat_A, c_mat_A, use_cache=True)
+    t1 = (time.time() - t0) * 1000
+    print(f"1. First Request (Cold Miss)      : {t1:8.3f} ms | CacheHit={resp1.cache_hit} | Profit=${resp1.metrics.total_expected_incremental_profit:.2f}")
+    results.append({"scenario": "cold_cache_miss", "latency_ms": round(t1, 3), "cache_hit": resp1.cache_hit})
 
-    # 2. Warm Cache Hit
+    # Scenario 2: Repeated identical request with a cache hit
     t0 = time.time()
-    resp_warm = service.optimize(req, p_mat, c_mat, use_cache=True)
-    warm_time = time.time() - t0
-    print(f"Warm Cache Request : Time = {warm_time*1000:.3f} ms | Cache Hit = {resp_warm.cache_hit} | Profit = ${resp_warm.metrics.total_expected_incremental_profit:.2f}")
+    resp2 = service.optimize(req_base, p_mat_A, c_mat_A, use_cache=True)
+    t2 = (time.time() - t0) * 1000
+    print(f"2. Repeated Request (Warm Hit)    : {t2:8.3f} ms | CacheHit={resp2.cache_hit} | Profit=${resp2.metrics.total_expected_incremental_profit:.2f}")
+    results.append({"scenario": "warm_cache_hit", "latency_ms": round(t2, 3), "cache_hit": resp2.cache_hit})
 
-    speedup = cold_time / max(warm_time, 1e-9)
-    print(f"Cache Acceleration  : {speedup:.1f}x speedup")
+    # Scenario 3: Same budget but different candidate cohort
+    t0 = time.time()
+    resp3 = service.optimize(req_base, p_mat_B, c_mat_B, use_cache=True)
+    t3 = (time.time() - t0) * 1000
+    print(f"3. Different Cohort (Same Budget) : {t3:8.3f} ms | CacheHit={resp3.cache_hit} | Profit=${resp3.metrics.total_expected_incremental_profit:.2f}")
+    results.append({"scenario": "different_cohort_miss", "latency_ms": round(t3, 3), "cache_hit": resp3.cache_hit})
 
-    # 3. Save benchmark summary
+    # Scenario 4: Same cohort but different solver mode (greedy)
+    req_greedy = OptimizationRequest(budget=1000.0, mode="greedy")
+    t0 = time.time()
+    resp4 = service.optimize(req_greedy, p_mat_A, c_mat_A, use_cache=True)
+    t4 = (time.time() - t0) * 1000
+    print(f"4. Different Mode (Greedy)        : {t4:8.3f} ms | CacheHit={resp4.cache_hit} | Profit=${resp4.metrics.total_expected_incremental_profit:.2f}")
+    results.append({"scenario": "different_mode_miss", "latency_ms": round(t4, 3), "cache_hit": resp4.cache_hit})
+
+    # Scenario 5: Cache eviction and subsequent recomputation
+    # Cache capacity is 2; adding resp4 evicted req_base on cohort_A
+    print(f"Cache Eviction Count: {service.cache.evictions}")
+    t0 = time.time()
+    resp5 = service.optimize(req_base, p_mat_A, c_mat_A, use_cache=True)
+    t5 = (time.time() - t0) * 1000
+    print(f"5. Evicted Item (Recomputed Miss) : {t5:8.3f} ms | CacheHit={resp5.cache_hit} | Profit=${resp5.metrics.total_expected_incremental_profit:.2f}")
+    results.append({"scenario": "evicted_recomputation_miss", "latency_ms": round(t5, 3), "cache_hit": resp5.cache_hit})
+
     summary = {
-        "cohort_size": len(sample_df),
-        "budget": req.budget,
-        "mode": req.mode,
-        "cold_cache_latency_ms": round(cold_time * 1000, 3),
-        "warm_cache_latency_ms": round(warm_time * 1000, 3),
-        "speedup_factor": round(speedup, 1),
-        "cache_hits": service.cache.hits,
-        "cache_misses": service.cache.misses,
+        "benchmarks": results,
+        "cache_statistics": {
+            "capacity": service.cache.maxsize,
+            "hits": service.cache.hits,
+            "misses": service.cache.misses,
+            "evictions": service.cache.evictions,
+        }
     }
 
     out_file = os.path.join("reports", "day4_cache_benchmark_summary.json")
     with open(out_file, "w", encoding="utf-8") as f:
         json.dump(summary, f, indent=2)
-    print(f"Saved cache benchmark summary to {out_file}")
+    print(f"\nSaved updated benchmark summary to {out_file}")
     print("=" * 75)
 
 

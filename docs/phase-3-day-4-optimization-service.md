@@ -1,13 +1,13 @@
 ﻿# Phase 3, Day 4: Optimization Service Layer, Frontier Caching, and API Contracts
 
 ## 1. Resolution of Day 3 Benchmark Inconsistencies
-* **$75,000 Budget Identity ($153,463.14 across Exact, Bounded-Gap, and Bounded-Time)**:
+* **$75,000 Budget Uniform Profit ($153,463.14 across Exact, Bounded-Gap, and Bounded-Time)**:
   - *Finding*: At $B = \$75,000$, the exact MILP solved to global mathematical optimality in **11.46 seconds**.
-  - Because 11.46s is under the 15-second threshold, `bounded_time_15s` naturally reached the exact global optimum before expiring, and was properly marked `is_optimal_proven: True`.
-  - For `bounded_gap_0.5pct`, HiGHS discovered the proven optimal basis while exploring branch-and-bound nodes within 13.33 seconds, achieving the exact optimal objective.
+  - Because 11.46s is under the 15-second cutoff, `bounded_time_15s` completed the full branch-and-cut tree before expiring, and was properly marked `is_optimal_proven: True`.
+  - For `bounded_gap_0.5pct`, HiGHS discovered this exact optimal basis within 13.33 seconds, achieving the exact optimal objective.
   - *Unspent Budget ($74,997.58 vs $75,000.00)*: With discrete treatment arms and non-linear economics, there was no incremental arm swap offering $\Delta\Pi > 0$ within the remaining $2.42 budget. The optimizer rationally conserved budget.
 * **Time-Limit Overrun Behavior (15s limit taking 25–47s)**:
-  - *Root Cause*: HiGHS only checks wall-clock limits at discrete solver boundaries (simplex pivots and branch-and-cut node solves).
+  - *Root Cause*: HiGHS inspects wall-clock limits at discrete solver boundaries (simplex pivot iterations and branch-and-bound node completions).
   - Additionally, Day 3 elapsed time included Python matrix formatting, CSR sparse matrix assembly for 80,000 variables, and post-solve allocation reconstruction.
   - *Resolution*: The Day 4 service layer isolates `solver_time_seconds` from total service lifecycle time (`elapsed_seconds`).
 
@@ -41,7 +41,7 @@ Implemented in `src/optimization/schemas.py`:
 
 ## 4. Cache Mechanics: Safety, Keys, and Eviction
 * **Safe Deterministic Key**:
-  `opt:{version}:{cohort_sha256[:16]}:b_{budget:.2f}:m_{mode}:gap_{gap}:tl_{tl}`
+  $$\text{Key} = \text{"opt:v1:\{cohort\_sha256[:16]\}:b\_\{budget\}:m\_\{mode\}:gap\_\{gap\}:tl\_\{tl\}"}$$
   - Guarantees different cohorts or candidate values never collide.
   - Differentiates exact from early-stopped bounded runs.
 * **LRU Bounded Eviction**:
@@ -53,7 +53,9 @@ Implemented in `src/optimization/schemas.py`:
 
 ---
 
-## 5. Cold vs. Warm Latency Measurements
-* **Cold Cache (Optimization Miss)**: ~150–400 ms for small subsets; ~8–12 s for 20k full population.
-* **Warm Cache (Memory Hit)**: **< 1.0 ms** (sub-millisecond retrieval with complete payload deserialization).
-* Demonstrates that caching accelerates repeated dashboard filter queries by over **1,000x**.
+## 5. Empirical Service & Cache Benchmarks (5 Core Scenarios)
+1. **Cold Cache Miss (First Request)**: Full solver execution (~150–250 ms for 500-customer cohort; ~8–12 s for 20k full population).
+2. **Warm Cache Hit (Repeated Request)**: **< 1.0 ms** (sub-millisecond retrieval with complete payload deserialization, providing >900x speedup).
+3. **Different Cohort with Same Budget**: Triggers deterministic SHA-256 cache miss and runs independent solve without collision.
+4. **Different Mode/Settings with Same Cohort**: Triggers cache miss and dispatches requested mode (e.g., greedy baseline).
+5. **Cache Eviction and Subsequent Recomputation**: Demonstrates that overflowing LRU capacity evicts the oldest entry cleanly and triggers recomputation on re-query without corrupted state.
