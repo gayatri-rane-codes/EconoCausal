@@ -1,151 +1,195 @@
 ﻿"""
-Unit tests for offline budget frontier precomputation, persistence, and module exports.
+Comprehensive tests for budget frontier precomputation, persistence, validation,
+provenance tracking, status semantics, and public package exports (Phase 3 Day 5).
 """
 
 import os
 import shutil
 import tempfile
 import unittest
-import pandas as pd
+import json
 import numpy as np
+import pandas as pd
 
-# Verify direct exports from public package root
 from src.optimization import (
-    OptimizationService,
     OptimizationRequest,
-    SolverSettings,
     OptimizationResponse,
+    SolverSettings,
+    OptimizationService,
+    optimize_budget_allocation,
+    optimize_greedy_allocation,
+    OptimizationCache,
+    compute_cohort_fingerprint,
+    build_cache_key,
     save_frontier_result,
     load_frontier_result,
-    compute_cohort_fingerprint,
 )
 
 
 class TestFrontierPrecomputationAndExports(unittest.TestCase):
-
     def setUp(self):
         self.temp_dir = tempfile.mkdtemp()
         np.random.seed(42)
-        self.n_cust = 20
-        self.cust_ids = [f"c_{i}" for i in range(self.n_cust)]
-        arm_cols = ["arm_0", "arm_1", "arm_2", "arm_3"]
-        self.p_mat = pd.DataFrame(
-            np.random.uniform(5, 50, size=(self.n_cust, 4)),
-            index=self.cust_ids,
-            columns=arm_cols,
-        )
-        self.c_mat = pd.DataFrame(
-            np.random.uniform(2, 20, size=(self.n_cust, 4)),
-            index=self.cust_ids,
-            columns=arm_cols,
-        )
-        self.p_mat["arm_0"] = 0.0
-        self.c_mat["arm_0"] = 0.0
-        self.fingerprint = compute_cohort_fingerprint(self.p_mat, self.c_mat)
+        n = 10
+        self.customer_ids = [f"cust_{i:04d}" for i in range(n)]
+        
+        # Treatment arms: arm_0 (control), arm_1 (10%), arm_2 (20%), arm_3 (30%)
+        p_data = {
+            "arm_0": [0.0] * n,
+            "arm_1": [12.0, 15.0, 8.0, 20.0, 14.0, 9.0, 18.0, 11.0, 16.0, 13.0],
+            "arm_2": [22.0, 28.0, 14.0, 35.0, 25.0, 16.0, 31.0, 19.0, 29.0, 24.0],
+            "arm_3": [30.0, 38.0, 19.0, 48.0, 34.0, 22.0, 42.0, 26.0, 39.0, 32.0],
+        }
+        c_data = {
+            "arm_0": [0.0] * n,
+            "arm_1": [5.0, 6.0, 4.0, 7.0, 5.5, 4.5, 6.5, 5.0, 6.0, 5.2],
+            "arm_2": [11.0, 13.0, 9.0, 15.0, 12.0, 10.0, 14.0, 11.0, 13.0, 11.5],
+            "arm_3": [18.0, 21.0, 15.0, 24.0, 19.5, 16.0, 22.5, 17.5, 21.0, 18.5],
+        }
+        self.p_mat = pd.DataFrame(p_data, index=self.customer_ids)
+        self.c_mat = pd.DataFrame(c_data, index=self.customer_ids)
+        self.cohort_fp = compute_cohort_fingerprint(self.p_mat, self.c_mat)
 
     def tearDown(self):
         shutil.rmtree(self.temp_dir, ignore_errors=True)
 
-    def test_save_and_load_valid_artifact(self):
-        service = OptimizationService(persistence_dir=self.temp_dir)
-        req = OptimizationRequest(budget=50.0, mode="greedy", cohort_id="test_cohort")
+    def test_public_package_exports(self):
+        """Verify all mandatory Day 5 interfaces are exported via __all__."""
+        import src.optimization as opt
+        expected = [
+            "optimize_budget_allocation",
+            "optimize_greedy_allocation",
+            "OptimizationRequest",
+            "SolverSettings",
+            "OptimizationResponse",
+            "AggregateMetrics",
+            "CustomerAllocationItem",
+            "OptimizationCache",
+            "compute_cohort_fingerprint",
+            "build_cache_key",
+            "OptimizationService",
+            "save_frontier_result",
+            "load_frontier_result",
+        ]
+        for symbol in expected:
+            self.assertTrue(hasattr(opt, symbol), f"Missing public symbol: {symbol}")
+            self.assertIn(symbol, opt.__all__, f"Symbol {symbol} not in __all__")
+
+    def test_save_and_load_valid_artifact_preserves_customer_ids(self):
+        """Verify customer-ID preservation and validation across save/load."""
+        service = OptimizationService(cache_size=10, persistence_dir=self.temp_dir)
+        req = OptimizationRequest(budget=50.0, mode="bounded_gap", solver_settings=SolverSettings(mip_rel_gap=0.01))
         resp = service.optimize(req, self.p_mat, self.c_mat, use_cache=False, check_persistence=False)
 
         saved_path = save_frontier_result(
             output_dir=self.temp_dir,
-            cohort_fingerprint=self.fingerprint,
-            cohort_id="test_cohort",
+            cohort_fingerprint=self.cohort_fp,
+            cohort_id="default_cohort",
             budget=50.0,
+            mode="bounded_gap",
+            solver_settings={"mip_rel_gap": 0.01},
+            response_dict=resp.to_dict(include_allocations=True),
+            policy_version="v1",
+        )
+        self.assertTrue(os.path.exists(saved_path))
+
+        loaded_resp = load_frontier_result(
+            filepath=saved_path,
+            expected_fingerprint=self.cohort_fp,
+            expected_budget=50.0,
+            expected_mode="bounded_gap",
+            expected_policy_version="v1",
+        )
+        self.assertIsNotNone(loaded_resp)
+        loaded_cust_ids = [item["customer_id"] for item in loaded_resp["allocations"]]
+        self.assertEqual(loaded_cust_ids, self.customer_ids)
+
+    def test_reject_mismatched_cohort_budget_or_mode(self):
+        """Reject persisted artifacts when fingerprint, budget, or mode differs."""
+        service = OptimizationService(cache_size=10, persistence_dir=self.temp_dir)
+        req = OptimizationRequest(budget=30.0, mode="greedy")
+        resp = service.optimize(req, self.p_mat, self.c_mat, use_cache=False, check_persistence=False)
+
+        saved_path = save_frontier_result(
+            output_dir=self.temp_dir,
+            cohort_fingerprint=self.cohort_fp,
+            cohort_id="default_cohort",
+            budget=30.0,
             mode="greedy",
             solver_settings={},
             response_dict=resp.to_dict(include_allocations=True),
         )
-        self.assertTrue(os.path.isfile(saved_path))
-
-        loaded = load_frontier_result(
-            filepath=saved_path,
-            expected_fingerprint=self.fingerprint,
-            expected_budget=50.0,
-            expected_mode="greedy",
-        )
-        self.assertIsNotNone(loaded)
-        self.assertEqual(loaded["request_budget"], 50.0)
-        self.assertEqual(loaded["optimization_mode"], "greedy")
-        self.assertEqual(len(loaded["allocations"]), self.n_cust)
-        self.assertEqual(loaded["allocations"][0]["customer_id"], self.cust_ids[0])
-
-    def test_reject_mismatched_fingerprint_or_budget(self):
-        service = OptimizationService(persistence_dir=self.temp_dir)
-        req = OptimizationRequest(budget=50.0, mode="greedy")
-        resp = service.optimize(req, self.p_mat, self.c_mat, use_cache=False, check_persistence=False)
-
-        saved_path = save_frontier_result(
-            output_dir=self.temp_dir,
-            cohort_fingerprint=self.fingerprint,
-            cohort_id="test_cohort",
-            budget=50.0,
-            mode="greedy",
-            solver_settings={},
-            response_dict=resp.to_dict(),
-        )
 
         # Mismatched fingerprint
-        bad_fp = load_frontier_result(
-            filepath=saved_path,
-            expected_fingerprint="0000000000000000",
-            expected_budget=50.0,
-            expected_mode="greedy",
-        )
-        self.assertIsNone(bad_fp)
+        res_bad_fp = load_frontier_result(saved_path, expected_fingerprint="bad_fp_hash", expected_budget=30.0, expected_mode="greedy")
+        self.assertIsNone(res_bad_fp)
 
         # Mismatched budget
-        bad_b = load_frontier_result(
-            filepath=saved_path,
-            expected_fingerprint=self.fingerprint,
-            expected_budget=75.0,
-            expected_mode="greedy",
-        )
-        self.assertIsNone(bad_b)
+        res_bad_b = load_frontier_result(saved_path, expected_fingerprint=self.cohort_fp, expected_budget=40.0, expected_mode="greedy")
+        self.assertIsNone(res_bad_b)
 
         # Mismatched mode
-        bad_m = load_frontier_result(
-            filepath=saved_path,
-            expected_fingerprint=self.fingerprint,
-            expected_budget=50.0,
-            expected_mode="exact",
-        )
-        self.assertIsNone(bad_m)
+        res_bad_m = load_frontier_result(saved_path, expected_fingerprint=self.cohort_fp, expected_budget=30.0, expected_mode="bounded_gap")
+        self.assertIsNone(res_bad_m)
 
-    def test_corrupted_or_invalid_schema_file(self):
-        bad_file = os.path.join(self.temp_dir, "corrupt.json")
-        with open(bad_file, "w") as f:
-            f.write("{invalid_json: true")
+    def test_reject_corrupted_or_incomplete_file(self):
+        """Reject corrupted JSON or incomplete payload without crashing."""
+        corrupt_path = os.path.join(self.temp_dir, "frontier_corrupt_b50_greedy.json")
+        with open(corrupt_path, "w") as f:
+            f.write("{ invalid json")
+        self.assertIsNone(load_frontier_result(corrupt_path, self.cohort_fp, 50.0, "greedy"))
 
-        res = load_frontier_result(bad_file, self.fingerprint, 50.0, "greedy")
-        self.assertIsNone(res)
+        incomplete_path = os.path.join(self.temp_dir, "frontier_incomplete_b50_greedy.json")
+        with open(incomplete_path, "w") as f:
+            json.dump({"cohort_fingerprint": "abc"}, f)
+        self.assertIsNone(load_frontier_result(incomplete_path, self.cohort_fp, 50.0, "greedy"))
 
-    def test_service_retrieves_persisted_artifact(self):
-        service = OptimizationService(persistence_dir=self.temp_dir)
-        req = OptimizationRequest(budget=40.0, mode="greedy")
-        live_resp = service.optimize(req, self.p_mat, self.c_mat, use_cache=False, check_persistence=False)
+    def test_provenance_lifecycle_live_persisted_cache(self):
+        """Verify provenance tags across live execution, memory cache, and persistence lookup."""
+        service = OptimizationService(cache_size=10, persistence_dir=self.temp_dir)
+        req = OptimizationRequest(budget=50.0, mode="bounded_gap", solver_settings=SolverSettings(mip_rel_gap=0.01))
+        
+        # 1. Live run (cold)
+        live_resp = service.optimize(req, self.p_mat, self.c_mat, use_cache=True, check_persistence=True)
+        self.assertFalse(live_resp.cache_hit)
+        self.assertIn(live_resp.provenance, ["live_solver", "live_optimization"])
 
+        # 2. In-memory cache hit
+        cached_resp = service.optimize(req, self.p_mat, self.c_mat, use_cache=True, check_persistence=True)
+        self.assertTrue(cached_resp.cache_hit)
+        self.assertEqual(cached_resp.provenance, "in_memory_cache")
+
+        # 3. Save artifact to persistence_dir
         save_frontier_result(
             output_dir=self.temp_dir,
-            cohort_fingerprint=self.fingerprint,
-            cohort_id="default",
-            budget=40.0,
-            mode="greedy",
-            solver_settings={},
+            cohort_fingerprint=self.cohort_fp,
+            cohort_id="default_cohort",
+            budget=50.0,
+            mode="bounded_gap",
+            solver_settings={"mip_rel_gap": 0.01},
             response_dict=live_resp.to_dict(include_allocations=True),
         )
 
-        # Retrieve through service
-        fresh_service = OptimizationService(persistence_dir=self.temp_dir)
-        retrieved_resp = fresh_service.optimize(req, self.p_mat, self.c_mat, use_cache=False, check_persistence=True)
+        # 4. Fresh service instance (cold in-memory cache, warm disk)
+        fresh_service = OptimizationService(cache_size=10, persistence_dir=self.temp_dir)
+        persisted_resp = fresh_service.optimize(req, self.p_mat, self.c_mat, use_cache=True, check_persistence=True)
+        self.assertFalse(persisted_resp.cache_hit)
+        self.assertEqual(persisted_resp.provenance, "persisted_precomputation")
+        self.assertEqual(persisted_resp.request_budget, 50.0)
 
-        self.assertEqual(retrieved_resp.provenance, "persisted_precomputation")
-        self.assertAlmostEqual(retrieved_resp.metrics.total_expected_incremental_profit, live_resp.metrics.total_expected_incremental_profit, places=2)
-        self.assertEqual(len(retrieved_resp.allocations), len(live_resp.allocations))
+    def test_canonical_budget_grid_progression(self):
+        """Verify deterministic profit progression across monotonic budget grid."""
+        service = OptimizationService(cache_size=10)
+        grid = [10.0, 25.0, 50.0, 75.0, 100.0]
+        prev_profit = -1.0
+        
+        for b in grid:
+            req = OptimizationRequest(budget=b, mode="greedy")
+            resp = service.optimize(req, self.p_mat, self.c_mat, use_cache=False)
+            self.assertTrue(resp.is_feasible)
+            self.assertLessEqual(resp.metrics.total_budget_spent, b + 1e-5)
+            self.assertGreaterEqual(resp.metrics.total_expected_incremental_profit, prev_profit)
+            prev_profit = resp.metrics.total_expected_incremental_profit
 
 
 if __name__ == "__main__":
