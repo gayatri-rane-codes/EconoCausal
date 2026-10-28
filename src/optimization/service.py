@@ -1,18 +1,14 @@
 ﻿"""
-Optimization service layer orchestrating candidate policy data,
-safe caching, solver execution, and structured API contracts.
+Service layer mediating between candidate policies, mathematical optimization,
+in-memory caching, and optional persisted frontier artifact reuse.
 """
 
 import time
-from typing import Optional, Dict, Any, Tuple
+import os
+from typing import Optional, Dict, Any
 import pandas as pd
 import numpy as np
 
-from src.optimization.budget import (
-    optimize_budget_allocation,
-    optimize_greedy_allocation,
-    validate_candidate_inputs,
-)
 from src.optimization.schemas import (
     OptimizationRequest,
     OptimizationResponse,
@@ -24,130 +20,162 @@ from src.optimization.cache import (
     compute_cohort_fingerprint,
     build_cache_key,
 )
+from src.optimization.budget import (
+    optimize_budget_allocation,
+    optimize_greedy_allocation,
+)
+from src.optimization.persistence import load_frontier_result
 
 
 class OptimizationService:
-    """Service layer coordinating optimization runs, caching, and payload contracts."""
+    """Reusable optimization service orchestrating caching, persistence, and solver execution."""
 
-    def __init__(self, cache_size: int = 64):
+    def __init__(self, cache_size: int = 64, persistence_dir: Optional[str] = None):
         self.cache = OptimizationCache(maxsize=cache_size)
+        self.persistence_dir = persistence_dir
 
     def optimize(
         self,
         request: OptimizationRequest,
-        profit_matrix: pd.DataFrame,
-        cost_matrix: pd.DataFrame,
+        candidate_profit_matrix: pd.DataFrame,
+        candidate_cost_matrix: pd.DataFrame,
         use_cache: bool = True,
+        check_persistence: bool = True,
     ) -> OptimizationResponse:
-        t_service_start = time.time()
+        """Executes or retrieves budget optimization based on request parameters."""
         request.validate()
 
-        # Validate inputs directly to catch mismatch or invalid candidate values early
-        validate_candidate_inputs(profit_matrix, cost_matrix, request.budget)
+        t_start = time.time()
+        cohort_fp = compute_cohort_fingerprint(candidate_profit_matrix, candidate_cost_matrix)
+        mip_gap = request.solver_settings.mip_rel_gap if request.solver_settings else None
+        time_lim = request.solver_settings.time_limit if request.solver_settings else None
 
-        # Compute stable fingerprint of cohort
-        cohort_fp = compute_cohort_fingerprint(profit_matrix, cost_matrix)
-
-        # Map requested mode to solver options
-        mip_rel_gap = None
-        time_limit = None
-        if request.mode == "bounded_gap":
-            mip_rel_gap = request.solver_settings.mip_rel_gap or 0.005
-        elif request.mode == "bounded_time":
-            time_limit = request.solver_settings.time_limit or 15.0
-            mip_rel_gap = request.solver_settings.mip_rel_gap
-
+        # 1. In-memory Cache Check
         cache_key = build_cache_key(
             cohort_fingerprint=cohort_fp,
             budget=request.budget,
             mode=request.mode,
-            mip_rel_gap=mip_rel_gap,
-            time_limit=time_limit,
+            mip_rel_gap=mip_gap,
+            time_limit=time_lim,
         )
-
-        # 1. Check cache
         if use_cache:
-            cached_result = self.cache.get(cache_key)
-            if cached_result is not None:
-                total_elapsed = round(time.time() - t_service_start, 6)
-                cached_result["cache_hit"] = True
-                cached_result["elapsed_seconds"] = total_elapsed
-                return self._dict_to_response(cached_result, request.budget, request.mode)
+            cached_resp = self.cache.get(cache_key)
+            if cached_resp is not None:
+                cached_resp.cache_hit = True
+                cached_resp.provenance = "in_memory_cache"
+                cached_resp.elapsed_seconds = time.time() - t_start
+                return cached_resp
 
-        # 2. Cache miss -> Dispatch solver
-        t_solver_start = time.time()
+        # 2. Persisted Frontier Artifact Check (Exact Match)
+        if check_persistence and self.persistence_dir and os.path.isdir(self.persistence_dir):
+            filename = f"frontier_{cohort_fp[:8]}_b{int(request.budget)}_{request.mode}.json"
+            filepath = os.path.join(self.persistence_dir, filename)
+            persisted_data = load_frontier_result(
+                filepath=filepath,
+                expected_fingerprint=cohort_fp,
+                expected_budget=request.budget,
+                expected_mode=request.mode,
+            )
+            if persisted_data:
+                resp = OptimizationResponse.from_dict(persisted_data)
+                resp.cache_hit = False
+                resp.provenance = "persisted_precomputation"
+                resp.elapsed_seconds = time.time() - t_start
+                if use_cache:
+                    self.cache.put(cache_key, resp)
+                return resp
+
+        # 3. Live Optimization Dispatch
         if request.mode == "greedy":
-            raw_res = optimize_greedy_allocation(
-                profit_matrix=profit_matrix,
-                cost_matrix=cost_matrix,
+            res = optimize_greedy_allocation(
+                profit_matrix=candidate_profit_matrix,
+                cost_matrix=candidate_cost_matrix,
                 budget=request.budget,
+            )
+        elif request.mode == "exact":
+            res = optimize_budget_allocation(
+                profit_matrix=candidate_profit_matrix,
+                cost_matrix=candidate_cost_matrix,
+                budget=request.budget,
+                mip_rel_gap=None,
+                time_limit=None,
+            )
+        elif request.mode == "bounded_gap":
+            gap = mip_gap if mip_gap is not None else 0.005
+            res = optimize_budget_allocation(
+                profit_matrix=candidate_profit_matrix,
+                cost_matrix=candidate_cost_matrix,
+                budget=request.budget,
+                mip_rel_gap=gap,
+                time_limit=time_lim,
+            )
+        elif request.mode == "bounded_time":
+            tl = time_lim if time_lim is not None else 15.0
+            res = optimize_budget_allocation(
+                profit_matrix=candidate_profit_matrix,
+                cost_matrix=candidate_cost_matrix,
+                budget=request.budget,
+                mip_rel_gap=mip_gap,
+                time_limit=tl,
             )
         else:
-            raw_res = optimize_budget_allocation(
-                profit_matrix=profit_matrix,
-                cost_matrix=cost_matrix,
-                budget=request.budget,
-                mip_rel_gap=mip_rel_gap,
-                time_limit=time_limit,
-                allow_greedy_fallback=request.solver_settings.allow_greedy_fallback,
-            )
-        solver_elapsed = round(time.time() - t_solver_start, 4)
-        total_elapsed = round(time.time() - t_service_start, 4)
+            raise ValueError(f"Unsupported mode: {request.mode}")
 
-        raw_res["cache_hit"] = False
-        raw_res["solver_time_seconds"] = solver_elapsed
-        raw_res["elapsed_seconds"] = total_elapsed
+        elapsed = time.time() - t_start
+        solver_time = res.get("elapsed_seconds", 0.0)
 
-        # 3. Store valid feasible results in cache
-        if use_cache and raw_res.get("is_feasible", False):
-            self.cache.put(cache_key, raw_res)
-
-        return self._dict_to_response(raw_res, request.budget, request.mode)
-
-    def _dict_to_response(
-        self,
-        res_dict: Dict[str, Any],
-        budget: float,
-        mode: str,
-    ) -> OptimizationResponse:
-        alloc_df = res_dict["allocation"]
-        n_cust = len(alloc_df)
-        tot_profit = res_dict["total_expected_incremental_profit"]
-
-        alloc_items = []
-        for cust_id, row in alloc_df.iterrows():
-            alloc_items.append(
-                CustomerAllocationItem(
-                    customer_id=str(cust_id),
+        # Build allocations
+        alloc_df = res.get("allocation")
+        allocations_list = []
+        if alloc_df is not None:
+            for cid, row in alloc_df.iterrows():
+                allocations_list.append(CustomerAllocationItem(
+                    customer_id=str(cid),
                     assigned_arm=int(row["assigned_arm"]),
                     discount_rate=float(row["discount_rate"]),
                     expected_incremental_profit=float(row["expected_incremental_profit"]),
                     allocated_budget_cost=float(row["allocated_budget_cost"]),
-                )
-            )
+                ))
+
+        arm_counts_raw = res.get("arm_counts", {})
+        arm_counts_str = {str(k): int(v) for k, v in arm_counts_raw.items()}
+        n_cust = len(candidate_profit_matrix)
+        tot_profit = float(res.get("total_expected_incremental_profit", 0.0))
 
         metrics = AggregateMetrics(
             total_expected_incremental_profit=tot_profit,
-            total_budget_spent=res_dict["total_budget_spent"],
-            budget_remaining=res_dict["budget_remaining"],
-            arm_counts=res_dict["arm_counts"],
-            profit_per_customer=round(tot_profit / n_cust, 4) if n_cust > 0 else 0.0,
+            total_budget_spent=float(res.get("total_budget_spent", 0.0)),
+            budget_remaining=float(res.get("budget_remaining", 0.0)),
+            arm_counts=arm_counts_str,
+            profit_per_customer=tot_profit / n_cust if n_cust > 0 else 0.0,
             cohort_size=n_cust,
         )
 
-        return OptimizationResponse(
-            request_budget=budget,
-            optimization_mode=mode,
-            method_executed=res_dict.get("method", mode),
-            status=res_dict.get("status", "unknown"),
-            solver_message=res_dict.get("solver_message", ""),
-            is_feasible=res_dict.get("is_feasible", False),
-            is_optimal_proven=res_dict.get("is_optimal_proven", False),
-            cache_hit=res_dict.get("cache_hit", False),
-            elapsed_seconds=res_dict.get("elapsed_seconds", 0.0),
-            solver_time_seconds=res_dict.get("solver_time_seconds", 0.0),
-            mip_gap=res_dict.get("mip_gap"),
-            mip_dual_bound=res_dict.get("mip_dual_bound"),
+        raw_status = res.get("solver_message", "")
+        is_opt_proven = bool(res.get("is_optimal_proven", False))
+        is_feas = bool(res.get("is_feasible", False))
+
+        response = OptimizationResponse(
+            request_budget=request.budget,
+            optimization_mode=request.mode,
+            method_executed=str(res.get("method", request.mode)),
+            status=str(res.get("status", "unknown")),
+            solver_message=raw_status,
+            is_feasible=is_feas,
+            is_optimal_proven=is_opt_proven,
+            cache_hit=False,
+            elapsed_seconds=elapsed,
+            solver_time_seconds=solver_time,
+            mip_gap=res.get("mip_gap"),
+            mip_dual_bound=res.get("mip_dual_bound"),
             metrics=metrics,
-            allocations=alloc_items,
+            allocations=allocations_list,
+            raw_solver_status=raw_status,
+            provenance="live_optimization",
         )
+
+        # Only cache feasible outcomes
+        if use_cache and is_feas:
+            self.cache.put(cache_key, response)
+
+        return response

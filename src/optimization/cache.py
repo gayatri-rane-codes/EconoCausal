@@ -1,25 +1,27 @@
 ﻿"""
-Safe, deterministic LRU cache module for budget optimization results.
-Computes stable SHA-256 fingerprints across candidate matrices, budgets,
-and solver configurations. Returns defensive copies to prevent caller mutation.
+Deterministic in-memory LRU cache for optimization results.
+Prevents cross-cohort, cross-budget, and cross-mode key collisions via SHA-256 fingerprinting.
 """
 
-import hashlib
 import copy
-from typing import Dict, Any, Optional, Tuple
+import hashlib
+from typing import Dict, Any, Optional
 import pandas as pd
 import numpy as np
 
 
-def compute_cohort_fingerprint(profit_matrix: pd.DataFrame, cost_matrix: pd.DataFrame) -> str:
-    """Computes a fast, stable deterministic SHA-256 digest of candidate matrices."""
+def compute_cohort_fingerprint(profit_df: pd.DataFrame, cost_df: pd.DataFrame) -> str:
+    """
+    Computes a deterministic SHA-256 hash over candidate customer matrices.
+    Rounds numerical matrices to 6 decimal places to prevent bit-level floating-point jitter
+    from multi-threaded estimation models while preserving strict numerical discrimination.
+    """
     hasher = hashlib.sha256()
-    # Hash customer IDs and ordering
-    hasher.update(",".join(map(str, profit_matrix.index.values)).encode("utf-8"))
-    # Hash profit and cost array buffers
-    hasher.update(np.ascontiguousarray(profit_matrix.to_numpy(dtype=np.float64)).tobytes())
-    hasher.update(np.ascontiguousarray(cost_matrix.to_numpy(dtype=np.float64)).tobytes())
-    return hasher.hexdigest()[:16]
+    hasher.update(str(list(profit_df.index)).encode("utf-8"))
+    hasher.update(str(list(profit_df.columns)).encode("utf-8"))
+    hasher.update(np.round(profit_df.to_numpy(dtype=np.float64), 6).tobytes())
+    hasher.update(np.round(cost_df.to_numpy(dtype=np.float64), 6).tobytes())
+    return hasher.hexdigest()
 
 
 def build_cache_key(
@@ -33,36 +35,41 @@ def build_cache_key(
     """Generates a unique deterministic string key for all result-affecting parameters."""
     gap_str = f"{mip_rel_gap:.6f}" if mip_rel_gap is not None else "none"
     tl_str = f"{time_limit:.2f}" if time_limit is not None else "none"
-    return f"opt:{policy_version}:{cohort_fingerprint}:b_{budget:.2f}:m_{mode}:gap_{gap_str}:tl_{tl_str}"
+    return f"{cohort_fingerprint}_b{budget:.4f}_m{mode}_g{gap_str}_t{tl_str}_p{policy_version}"
 
 
 class OptimizationCache:
-    """Bounded, thread-safe LRU cache with eviction tracking and defensive copies."""
+    """Thread-safe, bounded LRU cache for optimization results returning defensive copies."""
 
     def __init__(self, maxsize: int = 64):
         if maxsize < 1:
-            raise ValueError(f"maxsize must be at least 1, got {maxsize}")
+            raise ValueError(f"Cache maxsize must be at least 1, got {maxsize}")
         self.maxsize = maxsize
-        self._cache: Dict[str, Dict[str, Any]] = {}
+        self._cache: Dict[str, Any] = {}
         self._access_order: Dict[str, int] = {}
         self._access_counter = 0
         self.hits = 0
         self.misses = 0
         self.evictions = 0
 
-    def get(self, key: str) -> Optional[Dict[str, Any]]:
-        if key in self._cache:
-            self.hits += 1
-            self._access_counter += 1
-            self._access_order[key] = self._access_counter
-            # Return deepcopy to ensure immutability
-            return copy.deepcopy(self._cache[key])
-        self.misses += 1
-        return None
+    def get(self, key: str) -> Optional[Any]:
+        if key not in self._cache:
+            self.misses += 1
+            return None
+        self.hits += 1
+        self._access_counter += 1
+        self._access_order[key] = self._access_counter
+        return copy.deepcopy(self._cache[key])
 
-    def put(self, key: str, value: Dict[str, Any]) -> None:
-        # Never cache failed, invalid, or non-feasible outcomes
-        if not value.get("is_feasible", False):
+    def put(self, key: str, value: Any) -> None:
+        if hasattr(value, "is_feasible"):
+            is_feas = getattr(value, "is_feasible")
+        elif isinstance(value, dict):
+            is_feas = value.get("is_feasible", False)
+        else:
+            is_feas = False
+
+        if not is_feas:
             return
 
         if key in self._cache:
@@ -72,7 +79,6 @@ class OptimizationCache:
             return
 
         if len(self._cache) >= self.maxsize:
-            # Evict Least Recently Used entry
             lru_key = min(self._access_order, key=self._access_order.get)
             del self._cache[lru_key]
             del self._access_order[lru_key]
@@ -82,12 +88,16 @@ class OptimizationCache:
         self._access_counter += 1
         self._access_order[key] = self._access_counter
 
+    def size(self) -> int:
+        return len(self._cache)
+
     def clear(self) -> None:
         self._cache.clear()
         self._access_order.clear()
+        self._access_counter = 0
         self.hits = 0
         self.misses = 0
         self.evictions = 0
 
-    def size(self) -> int:
+    def __len__(self) -> int:
         return len(self._cache)
