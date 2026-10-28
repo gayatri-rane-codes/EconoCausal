@@ -1,0 +1,3543 @@
+{
+  "schema_version": "frontier_v1",
+  "policy_version": "v1",
+  "cohort_fingerprint": "3a9a016eaf0a58ec74871ba57270420fafe36e63dc402b187cc357390afb367e",
+  "cohort_id": "sample_500",
+  "budget": 10000.0,
+  "mode": "bounded_gap",
+  "solver_settings": {
+    "mip_rel_gap": 0.005
+  },
+  "saved_at_epoch": 1793211537.3792832,
+  "response": {
+    "request_budget": 10000.0,
+    "optimization_mode": "bounded_gap",
+    "method_executed": "milp_bounded_gap",
+    "status": "feasible_suboptimal",
+    "solver_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+    "is_feasible": true,
+    "is_optimal_proven": false,
+    "cache_hit": false,
+    "elapsed_seconds": 0.020499229431152344,
+    "solver_time_seconds": 0.0205,
+    "mip_gap": 0.0002908918034685344,
+    "mip_dual_bound": 40405.69738489126,
+    "metrics": {
+      "total_expected_incremental_profit": 40393.9471,
+      "total_budget_spent": 9994.6859,
+      "budget_remaining": 5.3141,
+      "arm_counts": {
+        "0": 173,
+        "1": 206,
+        "2": 121,
+        "3": 0
+      },
+      "profit_per_customer": 80.7878942,
+      "cohort_size": 500
+    },
+    "allocations": [
+      {
+        "customer_id": "0",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "1",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 175.62196798440738,
+        "allocated_budget_cost": 45.704674220489714
+      },
+      {
+        "customer_id": "2",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 174.63680765222728,
+        "allocated_budget_cost": 27.65714250801196
+      },
+      {
+        "customer_id": "3",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 28.12777698864593,
+        "allocated_budget_cost": 6.6241777362445236
+      },
+      {
+        "customer_id": "4",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "5",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "6",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 159.10241353450309,
+        "allocated_budget_cost": 27.154884922868586
+      },
+      {
+        "customer_id": "7",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 50.81491226246107,
+        "allocated_budget_cost": 11.728323584717899
+      },
+      {
+        "customer_id": "8",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 53.70273043495642,
+        "allocated_budget_cost": 13.415780549208234
+      },
+      {
+        "customer_id": "9",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "10",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "11",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "12",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 86.5151469737136,
+        "allocated_budget_cost": 12.746997209142823
+      },
+      {
+        "customer_id": "13",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 38.79078194709666,
+        "allocated_budget_cost": 12.870020102478772
+      },
+      {
+        "customer_id": "14",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 125.61214864371803,
+        "allocated_budget_cost": 33.449405404857565
+      },
+      {
+        "customer_id": "15",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 35.224846586594346,
+        "allocated_budget_cost": 6.52887087297865
+      },
+      {
+        "customer_id": "16",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 89.43912899107993,
+        "allocated_budget_cost": 16.412627841635786
+      },
+      {
+        "customer_id": "17",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 265.9517437389385,
+        "allocated_budget_cost": 46.26355493362834
+      },
+      {
+        "customer_id": "18",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 40.4482564320786,
+        "allocated_budget_cost": 16.624636918041794
+      },
+      {
+        "customer_id": "19",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 124.3117430080694,
+        "allocated_budget_cost": 40.28260477867438
+      },
+      {
+        "customer_id": "20",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "21",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 305.96766502791945,
+        "allocated_budget_cost": 55.04498236989051
+      },
+      {
+        "customer_id": "22",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 310.47422401399865,
+        "allocated_budget_cost": 81.5421026682221
+      },
+      {
+        "customer_id": "23",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 59.15614203292276,
+        "allocated_budget_cost": 10.723091685943302
+      },
+      {
+        "customer_id": "24",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 62.64620248808256,
+        "allocated_budget_cost": 10.462879078320135
+      },
+      {
+        "customer_id": "25",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 32.645927943233005,
+        "allocated_budget_cost": 7.96500673385437
+      },
+      {
+        "customer_id": "26",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 88.65621608234076,
+        "allocated_budget_cost": 22.91085734248231
+      },
+      {
+        "customer_id": "27",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "28",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 112.16817199040788,
+        "allocated_budget_cost": 26.261009052126735
+      },
+      {
+        "customer_id": "29",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "30",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 177.3563327309765,
+        "allocated_budget_cost": 46.53499252566406
+      },
+      {
+        "customer_id": "31",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 69.88361330638038,
+        "allocated_budget_cost": 18.383179256264487
+      },
+      {
+        "customer_id": "32",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "33",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 264.6074063321818,
+        "allocated_budget_cost": 69.07786737024243
+      },
+      {
+        "customer_id": "34",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "35",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 15.234612660908349,
+        "allocated_budget_cost": 2.928837508468861
+      },
+      {
+        "customer_id": "36",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 109.95446542568817,
+        "allocated_budget_cost": 31.370540602854245
+      },
+      {
+        "customer_id": "37",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 85.47694602036806,
+        "allocated_budget_cost": 13.606544527387793
+      },
+      {
+        "customer_id": "38",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "39",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 119.59304839812978,
+        "allocated_budget_cost": 27.783634126217358
+      },
+      {
+        "customer_id": "40",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "41",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 100.65040141902944,
+        "allocated_budget_cost": 31.88670015766994
+      },
+      {
+        "customer_id": "42",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "43",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 698.186973159551,
+        "allocated_budget_cost": 206.3254747955057
+      },
+      {
+        "customer_id": "44",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 45.96056700004511,
+        "allocated_budget_cost": 10.770398263160269
+      },
+      {
+        "customer_id": "45",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "46",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 23.771677936213162,
+        "allocated_budget_cost": 5.473577786116483
+      },
+      {
+        "customer_id": "47",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 66.69011291800697,
+        "allocated_budget_cost": 18.805745879778556
+      },
+      {
+        "customer_id": "48",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 75.70770233788195,
+        "allocated_budget_cost": 21.331066926431326
+      },
+      {
+        "customer_id": "49",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 163.417855689939,
+        "allocated_budget_cost": 30.591723983681003
+      },
+      {
+        "customer_id": "50",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 85.46866332230978,
+        "allocated_budget_cost": 22.858751480256647
+      },
+      {
+        "customer_id": "51",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 140.81260342661847,
+        "allocated_budget_cost": 27.453268601400975
+      },
+      {
+        "customer_id": "52",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 31.71906040363846,
+        "allocated_budget_cost": 8.318361073875709
+      },
+      {
+        "customer_id": "53",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 342.995594894214,
+        "allocated_budget_cost": 87.67678920495864
+      },
+      {
+        "customer_id": "54",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 128.6910255307403,
+        "allocated_budget_cost": 28.617643448986335
+      },
+      {
+        "customer_id": "55",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "56",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 55.00664221819771,
+        "allocated_budget_cost": 23.216020315476555
+      },
+      {
+        "customer_id": "57",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "58",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 36.10640955891584,
+        "allocated_budget_cost": 5.710953134679782
+      },
+      {
+        "customer_id": "59",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 116.82187944151215,
+        "allocated_budget_cost": 19.428962075869062
+      },
+      {
+        "customer_id": "60",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "61",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 58.647173606407826,
+        "allocated_budget_cost": 15.159272295074098
+      },
+      {
+        "customer_id": "62",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 87.83121945103045,
+        "allocated_budget_cost": 27.70081371163637
+      },
+      {
+        "customer_id": "63",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "64",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 85.66137990737913,
+        "allocated_budget_cost": 21.980353323042127
+      },
+      {
+        "customer_id": "65",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 24.74816923907892,
+        "allocated_budget_cost": 10.251303815385597
+      },
+      {
+        "customer_id": "66",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "67",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 46.72127644390316,
+        "allocated_budget_cost": 8.470851391784379
+      },
+      {
+        "customer_id": "68",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 82.5919533135046,
+        "allocated_budget_cost": 15.19313964807919
+      },
+      {
+        "customer_id": "69",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 52.69515085012177,
+        "allocated_budget_cost": 9.767123728953777
+      },
+      {
+        "customer_id": "70",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "71",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "72",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 116.47226057465855,
+        "allocated_budget_cost": 14.903287398666238
+      },
+      {
+        "customer_id": "73",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 68.75096659953704,
+        "allocated_budget_cost": 19.31306666313353
+      },
+      {
+        "customer_id": "74",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 76.2504389074034,
+        "allocated_budget_cost": 24.4715821008226
+      },
+      {
+        "customer_id": "75",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 73.45383604808391,
+        "allocated_budget_cost": 13.671012423583363
+      },
+      {
+        "customer_id": "76",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 35.17507052963281,
+        "allocated_budget_cost": 12.005819501559623
+      },
+      {
+        "customer_id": "77",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 60.3220616379856,
+        "allocated_budget_cost": 22.978080967693028
+      },
+      {
+        "customer_id": "78",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 264.5876034218125,
+        "allocated_budget_cost": 48.82598439062171
+      },
+      {
+        "customer_id": "79",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 155.2393463584935,
+        "allocated_budget_cost": 27.884397176762818
+      },
+      {
+        "customer_id": "80",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 23.08506352447474,
+        "allocated_budget_cost": 9.842787553919726
+      },
+      {
+        "customer_id": "81",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 400.990854018902,
+        "allocated_budget_cost": 97.39703933543358
+      },
+      {
+        "customer_id": "82",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 76.31227834910439,
+        "allocated_budget_cost": 12.840446228900234
+      },
+      {
+        "customer_id": "83",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "84",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 209.6904409480614,
+        "allocated_budget_cost": 54.55108232756238
+      },
+      {
+        "customer_id": "85",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 386.0943280991724,
+        "allocated_budget_cost": 56.811101478903815
+      },
+      {
+        "customer_id": "86",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "87",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 79.21527293554695,
+        "allocated_budget_cost": 22.43449331239721
+      },
+      {
+        "customer_id": "88",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 211.7277287188769,
+        "allocated_budget_cost": 32.26337519573037
+      },
+      {
+        "customer_id": "89",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "90",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 184.1108798474321,
+        "allocated_budget_cost": 52.210564427492464
+      },
+      {
+        "customer_id": "91",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 221.3807368415242,
+        "allocated_budget_cost": 68.00192631572492
+      },
+      {
+        "customer_id": "92",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 79.90112838448457,
+        "allocated_budget_cost": 17.56057517813077
+      },
+      {
+        "customer_id": "93",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "94",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 119.12250166562893,
+        "allocated_budget_cost": 17.5158790350331
+      },
+      {
+        "customer_id": "95",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 56.94317512197615,
+        "allocated_budget_cost": 11.694640795893484
+      },
+      {
+        "customer_id": "96",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "97",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 187.66547781822115,
+        "allocated_budget_cost": 75.2272975353579
+      },
+      {
+        "customer_id": "98",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 110.5101186404836,
+        "allocated_budget_cost": 44.762568737831515
+      },
+      {
+        "customer_id": "99",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "100",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 64.9633284284071,
+        "allocated_budget_cost": 28.42159204760079
+      },
+      {
+        "customer_id": "101",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 119.34117722581601,
+        "allocated_budget_cost": 21.614972485569268
+      },
+      {
+        "customer_id": "102",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 37.44027226354815,
+        "allocated_budget_cost": 8.72612485597622
+      },
+      {
+        "customer_id": "103",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "104",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "105",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 114.89877968696318,
+        "allocated_budget_cost": 20.35209366773491
+      },
+      {
+        "customer_id": "106",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 82.5159970069792,
+        "allocated_budget_cost": 33.64478855633103
+      },
+      {
+        "customer_id": "107",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "108",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 169.9405936574159,
+        "allocated_budget_cost": 59.81359929526844
+      },
+      {
+        "customer_id": "109",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 55.82942751767132,
+        "allocated_budget_cost": 20.97872527974126
+      },
+      {
+        "customer_id": "110",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 144.7293176131042,
+        "allocated_budget_cost": 43.232790845900475
+      },
+      {
+        "customer_id": "111",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 27.667421835824666,
+        "allocated_budget_cost": 4.595559043990772
+      },
+      {
+        "customer_id": "112",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 90.49942881678331,
+        "allocated_budget_cost": 13.84461730614649
+      },
+      {
+        "customer_id": "113",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 218.30885510763414,
+        "allocated_budget_cost": 53.78317278973713
+      },
+      {
+        "customer_id": "114",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 68.80255727836861,
+        "allocated_budget_cost": 11.127539856756243
+      },
+      {
+        "customer_id": "115",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 47.89908556009565,
+        "allocated_budget_cost": 13.638153951121742
+      },
+      {
+        "customer_id": "116",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 214.9811720828435,
+        "allocated_budget_cost": 56.03951912031595
+      },
+      {
+        "customer_id": "117",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 242.44740240890877,
+        "allocated_budget_cost": 70.57368915654543
+      },
+      {
+        "customer_id": "118",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "119",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 84.89789255007462,
+        "allocated_budget_cost": 16.553720660530246
+      },
+      {
+        "customer_id": "120",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 69.06517891301813,
+        "allocated_budget_cost": 18.717683100685164
+      },
+      {
+        "customer_id": "121",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 21.974188559447583,
+        "allocated_budget_cost": 9.261494134707766
+      },
+      {
+        "customer_id": "122",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 72.22580954504818,
+        "allocated_budget_cost": 25.612984712897273
+      },
+      {
+        "customer_id": "123",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 75.21843097935687,
+        "allocated_budget_cost": 13.72950689365036
+      },
+      {
+        "customer_id": "124",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "125",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 42.138182329323826,
+        "allocated_budget_cost": 15.718334507898778
+      },
+      {
+        "customer_id": "126",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 51.63745989249976,
+        "allocated_budget_cost": 11.620697889078937
+      },
+      {
+        "customer_id": "127",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 11.819949827774218,
+        "allocated_budget_cost": 5.249492358050167
+      },
+      {
+        "customer_id": "128",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "129",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 39.39331863499372,
+        "allocated_budget_cost": 7.204148349210197
+      },
+      {
+        "customer_id": "130",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 93.83335211172096,
+        "allocated_budget_cost": 19.188308005880053
+      },
+      {
+        "customer_id": "131",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "132",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 52.26942367183318,
+        "allocated_budget_cost": 10.246480193254381
+      },
+      {
+        "customer_id": "133",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "134",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 350.91655181985516,
+        "allocated_budget_cost": 80.61612797998391
+      },
+      {
+        "customer_id": "135",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 231.78550308937594,
+        "allocated_budget_cost": 66.2451892321529
+      },
+      {
+        "customer_id": "136",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "137",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "138",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "139",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "140",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 130.91824120808982,
+        "allocated_budget_cost": 21.623628484636306
+      },
+      {
+        "customer_id": "141",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 209.7044229267536,
+        "allocated_budget_cost": 47.31683588075041
+      },
+      {
+        "customer_id": "142",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 120.73629078857925,
+        "allocated_budget_cost": 23.99796267308312
+      },
+      {
+        "customer_id": "143",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "144",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 54.734412938408475,
+        "allocated_budget_cost": 11.352384891495184
+      },
+      {
+        "customer_id": "145",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 47.06812454759626,
+        "allocated_budget_cost": 12.534675490173768
+      },
+      {
+        "customer_id": "146",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 139.4913252881879,
+        "allocated_budget_cost": 40.61042238358883
+      },
+      {
+        "customer_id": "147",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 111.99208644317271,
+        "allocated_budget_cost": 24.073641391745934
+      },
+      {
+        "customer_id": "148",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "149",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "150",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 119.63791493462443,
+        "allocated_budget_cost": 19.43094289129602
+      },
+      {
+        "customer_id": "151",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 75.59731411467416,
+        "allocated_budget_cost": 26.364234901630464
+      },
+      {
+        "customer_id": "152",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "153",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 19.149058873108963,
+        "allocated_budget_cost": 5.641739940689947
+      },
+      {
+        "customer_id": "154",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 13.852079229669588,
+        "allocated_budget_cost": 3.5253023610795178
+      },
+      {
+        "customer_id": "155",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 47.98388589276031,
+        "allocated_budget_cost": 16.346288731197912
+      },
+      {
+        "customer_id": "156",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "157",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 32.07898601567662,
+        "allocated_budget_cost": 9.430716907159297
+      },
+      {
+        "customer_id": "158",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 134.12810748603945,
+        "allocated_budget_cost": 39.789889720671056
+      },
+      {
+        "customer_id": "159",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 370.58623494660185,
+        "allocated_budget_cost": 96.11328166073355
+      },
+      {
+        "customer_id": "160",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 160.63937892587663,
+        "allocated_budget_cost": 46.33219362767773
+      },
+      {
+        "customer_id": "161",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "162",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "163",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 96.62952703367264,
+        "allocated_budget_cost": 13.790175107035402
+      },
+      {
+        "customer_id": "164",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 43.73636597645934,
+        "allocated_budget_cost": 13.319762886273264
+      },
+      {
+        "customer_id": "165",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 132.3244184353008,
+        "allocated_budget_cost": 40.310690443963196
+      },
+      {
+        "customer_id": "166",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 36.939184342483024,
+        "allocated_budget_cost": 6.407862333814896
+      },
+      {
+        "customer_id": "167",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 20.761142695922892,
+        "allocated_budget_cost": 6.253849188435878
+      },
+      {
+        "customer_id": "168",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 39.24270848910795,
+        "allocated_budget_cost": 10.006458341531998
+      },
+      {
+        "customer_id": "169",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 113.03188643196191,
+        "allocated_budget_cost": 17.86534665431379
+      },
+      {
+        "customer_id": "170",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 45.92859661325157,
+        "allocated_budget_cost": 8.697868242802716
+      },
+      {
+        "customer_id": "171",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "172",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 217.08879035410848,
+        "allocated_budget_cost": 73.18074337267872
+      },
+      {
+        "customer_id": "173",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 57.31463487673683,
+        "allocated_budget_cost": 15.514275519828256
+      },
+      {
+        "customer_id": "174",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 61.076814482961375,
+        "allocated_budget_cost": 15.673669183313756
+      },
+      {
+        "customer_id": "175",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 230.60030542745488,
+        "allocated_budget_cost": 60.67690554881342
+      },
+      {
+        "customer_id": "176",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "177",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 93.42967773726528,
+        "allocated_budget_cost": 23.13329752636281
+      },
+      {
+        "customer_id": "178",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "179",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 201.2394501196023,
+        "allocated_budget_cost": 49.860527791066914
+      },
+      {
+        "customer_id": "180",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 98.38952284007321,
+        "allocated_budget_cost": 29.390435871119248
+      },
+      {
+        "customer_id": "181",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 44.65697792449953,
+        "allocated_budget_cost": 11.249551469710502
+      },
+      {
+        "customer_id": "182",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "183",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "184",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "185",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 262.79004172537543,
+        "allocated_budget_cost": 76.06062685837506
+      },
+      {
+        "customer_id": "186",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 181.58336812630165,
+        "allocated_budget_cost": 53.409652014033526
+      },
+      {
+        "customer_id": "187",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 86.1821489953275,
+        "allocated_budget_cost": 21.44877099975408
+      },
+      {
+        "customer_id": "188",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 137.66429737255828,
+        "allocated_budget_cost": 26.822605124871494
+      },
+      {
+        "customer_id": "189",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 9.63268989061575,
+        "allocated_budget_cost": 2.5226310468745132
+      },
+      {
+        "customer_id": "190",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "191",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 115.29946602365916,
+        "allocated_budget_cost": 48.099022747514965
+      },
+      {
+        "customer_id": "192",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "193",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 63.928078800606954,
+        "allocated_budget_cost": 18.60644208895633
+      },
+      {
+        "customer_id": "194",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "195",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "196",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 91.39519528234281,
+        "allocated_budget_cost": 19.203189225386467
+      },
+      {
+        "customer_id": "197",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 224.46974185773996,
+        "allocated_budget_cost": 71.69139353974889
+      },
+      {
+        "customer_id": "198",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "199",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 99.38309674903078,
+        "allocated_budget_cost": 37.8784629867911
+      },
+      {
+        "customer_id": "200",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "201",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 62.2776662930168,
+        "allocated_budget_cost": 15.268398225948253
+      },
+      {
+        "customer_id": "202",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "203",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "204",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 22.438030946962463,
+        "allocated_budget_cost": 7.46952630261451
+      },
+      {
+        "customer_id": "205",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 129.8851776389846,
+        "allocated_budget_cost": 22.55462513889393
+      },
+      {
+        "customer_id": "206",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 10.50522137890922,
+        "allocated_budget_cost": 3.761903888657577
+      },
+      {
+        "customer_id": "207",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 163.69572528276547,
+        "allocated_budget_cost": 54.36562503141839
+      },
+      {
+        "customer_id": "208",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 38.49579870379074,
+        "allocated_budget_cost": 13.112716397215205
+      },
+      {
+        "customer_id": "209",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 67.90151940424553,
+        "allocated_budget_cost": 26.294737863381346
+      },
+      {
+        "customer_id": "210",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 59.32523581927734,
+        "allocated_budget_cost": 17.04187064658637
+      },
+      {
+        "customer_id": "211",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 138.33421849297244,
+        "allocated_budget_cost": 54.717590943663616
+      },
+      {
+        "customer_id": "212",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 83.06943500550591,
+        "allocated_budget_cost": 31.5697208554237
+      },
+      {
+        "customer_id": "213",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 192.4613492912605,
+        "allocated_budget_cost": 42.280760489013716
+      },
+      {
+        "customer_id": "214",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "215",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "216",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "217",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 179.89641431593753,
+        "allocated_budget_cost": 29.487795490312507
+      },
+      {
+        "customer_id": "218",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 313.3004633746713,
+        "allocated_budget_cost": 59.22446649340377
+      },
+      {
+        "customer_id": "219",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 327.6941398811471,
+        "allocated_budget_cost": 85.26143776457191
+      },
+      {
+        "customer_id": "220",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "221",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 498.58064074883634,
+        "allocated_budget_cost": 135.9791156387596
+      },
+      {
+        "customer_id": "222",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 140.84907010630275,
+        "allocated_budget_cost": 42.6938077895892
+      },
+      {
+        "customer_id": "223",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 88.26962211993373,
+        "allocated_budget_cost": 18.479422216838618
+      },
+      {
+        "customer_id": "224",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 83.31364070608164,
+        "allocated_budget_cost": 14.073133721372722
+      },
+      {
+        "customer_id": "225",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 59.353919156559606,
+        "allocated_budget_cost": 9.108853639818927
+      },
+      {
+        "customer_id": "226",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 85.77184403594717,
+        "allocated_budget_cost": 27.098116003994132
+      },
+      {
+        "customer_id": "227",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "228",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 124.41333643420101,
+        "allocated_budget_cost": 25.722444022852688
+      },
+      {
+        "customer_id": "229",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "230",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 194.18335258104443,
+        "allocated_budget_cost": 36.67961855689708
+      },
+      {
+        "customer_id": "231",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 51.7091838167459,
+        "allocated_budget_cost": 18.242178095618208
+      },
+      {
+        "customer_id": "232",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "233",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "234",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 37.78891987201335,
+        "allocated_budget_cost": 9.88764549620575
+      },
+      {
+        "customer_id": "235",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 184.94922922231052,
+        "allocated_budget_cost": 50.81356991359006
+      },
+      {
+        "customer_id": "236",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 54.21159994560655,
+        "allocated_budget_cost": 10.533910523452978
+      },
+      {
+        "customer_id": "237",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "238",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 63.315823432849065,
+        "allocated_budget_cost": 22.484958159205455
+      },
+      {
+        "customer_id": "239",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "240",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 23.378878321238073,
+        "allocated_budget_cost": 9.490318344801413
+      },
+      {
+        "customer_id": "241",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "242",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "243",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 12.408742337891365,
+        "allocated_budget_cost": 3.3138285440995463
+      },
+      {
+        "customer_id": "244",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 62.749124992095425,
+        "allocated_budget_cost": 10.104048683794497
+      },
+      {
+        "customer_id": "245",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 142.2961641295667,
+        "allocated_budget_cost": 21.091471796292986
+      },
+      {
+        "customer_id": "246",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 81.61210674613784,
+        "allocated_budget_cost": 34.497322971793096
+      },
+      {
+        "customer_id": "247",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 50.11846102924811,
+        "allocated_budget_cost": 9.796382159434112
+      },
+      {
+        "customer_id": "248",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "249",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 97.04229832227901,
+        "allocated_budget_cost": 26.870452543277846
+      },
+      {
+        "customer_id": "250",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 54.792672410180074,
+        "allocated_budget_cost": 11.479530126851586
+      },
+      {
+        "customer_id": "251",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 101.19155301186414,
+        "allocated_budget_cost": 28.1979185795718
+      },
+      {
+        "customer_id": "252",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 156.2588894464457,
+        "allocated_budget_cost": 31.75472576033925
+      },
+      {
+        "customer_id": "253",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "254",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "255",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 111.34326932537329,
+        "allocated_budget_cost": 38.4202521472637
+      },
+      {
+        "customer_id": "256",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 189.58441993178303,
+        "allocated_budget_cost": 69.00281332575368
+      },
+      {
+        "customer_id": "257",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "258",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 180.97217545664788,
+        "allocated_budget_cost": 64.26787765561306
+      },
+      {
+        "customer_id": "259",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "260",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 323.678138944596,
+        "allocated_budget_cost": 85.95805988273291
+      },
+      {
+        "customer_id": "261",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 22.37950350812789,
+        "allocated_budget_cost": 9.719342289901467
+      },
+      {
+        "customer_id": "262",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 45.973040378017586,
+        "allocated_budget_cost": 14.26475475673777
+      },
+      {
+        "customer_id": "263",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 238.2992601525976,
+        "allocated_budget_cost": 78.50139557251086
+      },
+      {
+        "customer_id": "264",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 343.792684389108,
+        "allocated_budget_cost": 56.33475707311095
+      },
+      {
+        "customer_id": "265",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 283.1430815750883,
+        "allocated_budget_cost": 41.96297797763623
+      },
+      {
+        "customer_id": "266",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "267",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "268",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 26.93535743134487,
+        "allocated_budget_cost": 8.270411288216629
+      },
+      {
+        "customer_id": "269",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 76.72648521758413,
+        "allocated_budget_cost": 14.766404485136007
+      },
+      {
+        "customer_id": "270",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "271",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "272",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 454.33865101062077,
+        "allocated_budget_cost": 66.23946057950637
+      },
+      {
+        "customer_id": "273",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 215.65973921320122,
+        "allocated_budget_cost": 44.236693245911255
+      },
+      {
+        "customer_id": "274",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 136.0389545201881,
+        "allocated_budget_cost": 33.51467272446534
+      },
+      {
+        "customer_id": "275",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "276",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "277",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 93.44530303569466,
+        "allocated_budget_cost": 23.30388963345762
+      },
+      {
+        "customer_id": "278",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "279",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 53.57814620936217,
+        "allocated_budget_cost": 9.3098971689138
+      },
+      {
+        "customer_id": "280",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 64.28205617357561,
+        "allocated_budget_cost": 20.42035068595285
+      },
+      {
+        "customer_id": "281",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 24.920077764010752,
+        "allocated_budget_cost": 7.546519882316356
+      },
+      {
+        "customer_id": "282",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 59.215878456840024,
+        "allocated_budget_cost": 17.573030939648895
+      },
+      {
+        "customer_id": "283",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "284",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 239.67187131278928,
+        "allocated_budget_cost": 32.75214059540996
+      },
+      {
+        "customer_id": "285",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 64.41874735209943,
+        "allocated_budget_cost": 22.863316372455497
+      },
+      {
+        "customer_id": "286",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 157.95606037696504,
+        "allocated_budget_cost": 40.21691781966279
+      },
+      {
+        "customer_id": "287",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 171.0360249395373,
+        "allocated_budget_cost": 30.346138154712488
+      },
+      {
+        "customer_id": "288",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "289",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 270.01107327567433,
+        "allocated_budget_cost": 53.463635435561805
+      },
+      {
+        "customer_id": "290",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 220.76734123811715,
+        "allocated_budget_cost": 61.356282359790804
+      },
+      {
+        "customer_id": "291",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 117.51940519721934,
+        "allocated_budget_cost": 28.241505536695755
+      },
+      {
+        "customer_id": "292",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "293",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 40.17481474347783,
+        "allocated_budget_cost": 7.504332354919886
+      },
+      {
+        "customer_id": "294",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "295",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 53.12888970553624,
+        "allocated_budget_cost": 12.356509984501908
+      },
+      {
+        "customer_id": "296",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "297",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 172.67873756442424,
+        "allocated_budget_cost": 66.02295972938049
+      },
+      {
+        "customer_id": "298",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 123.71396494498507,
+        "allocated_budget_cost": 30.391862771665014
+      },
+      {
+        "customer_id": "299",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 34.320895235418824,
+        "allocated_budget_cost": 6.887789222916782
+      },
+      {
+        "customer_id": "300",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 25.666858730311894,
+        "allocated_budget_cost": 9.236739933174311
+      },
+      {
+        "customer_id": "301",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "302",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "303",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 280.72053258178613,
+        "allocated_budget_cost": 92.6732369535318
+      },
+      {
+        "customer_id": "304",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 101.97288342223946,
+        "allocated_budget_cost": 17.14335702222313
+      },
+      {
+        "customer_id": "305",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 95.18929640541592,
+        "allocated_budget_cost": 20.704557705548208
+      },
+      {
+        "customer_id": "306",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 65.63157261944633,
+        "allocated_budget_cost": 10.611288032602438
+      },
+      {
+        "customer_id": "307",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 245.15188202404397,
+        "allocated_budget_cost": 45.859793790739154
+      },
+      {
+        "customer_id": "308",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 118.21157765765481,
+        "allocated_budget_cost": 32.96215307307277
+      },
+      {
+        "customer_id": "309",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 86.19635199417694,
+        "allocated_budget_cost": 26.653594666019668
+      },
+      {
+        "customer_id": "310",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 184.61367684331532,
+        "allocated_budget_cost": 28.57723562333239
+      },
+      {
+        "customer_id": "311",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 133.6192886013485,
+        "allocated_budget_cost": 42.40390984459428
+      },
+      {
+        "customer_id": "312",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 448.9867526948101,
+        "allocated_budget_cost": 91.8291947438678
+      },
+      {
+        "customer_id": "313",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 123.21842083630014,
+        "allocated_budget_cost": 37.18058009292224
+      },
+      {
+        "customer_id": "314",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "315",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 24.83930589122234,
+        "allocated_budget_cost": 7.079067321246928
+      },
+      {
+        "customer_id": "316",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "317",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "318",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 69.51267301070678,
+        "allocated_budget_cost": 14.142445947931936
+      },
+      {
+        "customer_id": "319",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 137.1041880169878,
+        "allocated_budget_cost": 22.249415158788835
+      },
+      {
+        "customer_id": "320",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "321",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "322",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "323",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 60.523551460575774,
+        "allocated_budget_cost": 19.85364410429929
+      },
+      {
+        "customer_id": "324",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "325",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 96.30426708469437,
+        "allocated_budget_cost": 27.646107453854935
+      },
+      {
+        "customer_id": "326",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 83.49123892270032,
+        "allocated_budget_cost": 21.085254680142125
+      },
+      {
+        "customer_id": "327",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 60.79853659378363,
+        "allocated_budget_cost": 17.64308184375374
+      },
+      {
+        "customer_id": "328",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "329",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 206.87105307715876,
+        "allocated_budget_cost": 67.07207256412875
+      },
+      {
+        "customer_id": "330",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 114.79475858091456,
+        "allocated_budget_cost": 30.913666241100767
+      },
+      {
+        "customer_id": "331",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "332",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 41.28523355441159,
+        "allocated_budget_cost": 6.815033344969032
+      },
+      {
+        "customer_id": "333",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "334",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 9.877597952023407,
+        "allocated_budget_cost": 3.1223303741628685
+      },
+      {
+        "customer_id": "335",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "336",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "337",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 188.0957876033826,
+        "allocated_budget_cost": 48.400887511486964
+      },
+      {
+        "customer_id": "338",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "339",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "340",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 98.17752119768485,
+        "allocated_budget_cost": 35.037913466409435
+      },
+      {
+        "customer_id": "341",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "342",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 153.7900700286915,
+        "allocated_budget_cost": 24.818966843615343
+      },
+      {
+        "customer_id": "343",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 117.15801050000397,
+        "allocated_budget_cost": 36.23733450000045
+      },
+      {
+        "customer_id": "344",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 227.313704739856,
+        "allocated_budget_cost": 59.290689415539575
+      },
+      {
+        "customer_id": "345",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "346",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "347",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 92.34471976324954,
+        "allocated_budget_cost": 17.136316829644713
+      },
+      {
+        "customer_id": "348",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 88.75155060962919,
+        "allocated_budget_cost": 17.691555295243642
+      },
+      {
+        "customer_id": "349",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "350",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 85.42665091194766,
+        "allocated_budget_cost": 14.990192153260404
+      },
+      {
+        "customer_id": "351",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 186.0922341767873,
+        "allocated_budget_cost": 38.09933864088354
+      },
+      {
+        "customer_id": "352",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "353",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 96.69077446011217,
+        "allocated_budget_cost": 20.429624971584854
+      },
+      {
+        "customer_id": "354",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 145.92414182504427,
+        "allocated_budget_cost": 37.195160202782695
+      },
+      {
+        "customer_id": "355",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "356",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "357",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 283.22983638081536,
+        "allocated_budget_cost": 49.497017704253444
+      },
+      {
+        "customer_id": "358",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "359",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 167.69002473106474,
+        "allocated_budget_cost": 47.83660274789608
+      },
+      {
+        "customer_id": "360",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 87.43694663430134,
+        "allocated_budget_cost": 22.573494070477924
+      },
+      {
+        "customer_id": "361",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 147.33625129060175,
+        "allocated_budget_cost": 27.12320269950536
+      },
+      {
+        "customer_id": "362",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 137.23662014440464,
+        "allocated_budget_cost": 48.19227474444235
+      },
+      {
+        "customer_id": "363",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 29.675363547864762,
+        "allocated_budget_cost": 11.086524397256042
+      },
+      {
+        "customer_id": "364",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "365",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 48.21254890171611,
+        "allocated_budget_cost": 15.406644614071517
+      },
+      {
+        "customer_id": "366",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 144.51384966338938,
+        "allocated_budget_cost": 23.652971034915225
+      },
+      {
+        "customer_id": "367",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 251.96820455675964,
+        "allocated_budget_cost": 78.56120050630663
+      },
+      {
+        "customer_id": "368",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "369",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 57.00320618608053,
+        "allocated_budget_cost": 14.684410851898978
+      },
+      {
+        "customer_id": "370",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 182.8226387447252,
+        "allocated_budget_cost": 46.49330203919607
+      },
+      {
+        "customer_id": "371",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "372",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "373",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "374",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "375",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 125.34960588689526,
+        "allocated_budget_cost": 31.168126625626066
+      },
+      {
+        "customer_id": "376",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 107.31171518993003,
+        "allocated_budget_cost": 30.78556835443667
+      },
+      {
+        "customer_id": "377",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "378",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 358.2472777289548,
+        "allocated_budget_cost": 86.65574196988388
+      },
+      {
+        "customer_id": "379",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 107.52806132058633,
+        "allocated_budget_cost": 30.500640146731815
+      },
+      {
+        "customer_id": "380",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 79.79249756347095,
+        "allocated_budget_cost": 13.153626187551103
+      },
+      {
+        "customer_id": "381",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 120.9498800191418,
+        "allocated_budget_cost": 19.185498948375887
+      },
+      {
+        "customer_id": "382",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 38.734109342473495,
+        "allocated_budget_cost": 9.240867704719278
+      },
+      {
+        "customer_id": "383",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 78.14324649240305,
+        "allocated_budget_cost": 25.185082943600342
+      },
+      {
+        "customer_id": "384",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "385",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 85.37057349404306,
+        "allocated_budget_cost": 14.919814394423321
+      },
+      {
+        "customer_id": "386",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 18.976767129858157,
+        "allocated_budget_cost": 4.971482480518852
+      },
+      {
+        "customer_id": "387",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "388",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "389",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "390",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "391",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "392",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "393",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "394",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 108.79370623972189,
+        "allocated_budget_cost": 14.937847696827466
+      },
+      {
+        "customer_id": "395",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "396",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 99.63849849977748,
+        "allocated_budget_cost": 16.971105184198816
+      },
+      {
+        "customer_id": "397",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "398",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 61.75758750063851,
+        "allocated_budget_cost": 21.74499861118206
+      },
+      {
+        "customer_id": "399",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "400",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 161.98969717985202,
+        "allocated_budget_cost": 61.2623663533169
+      },
+      {
+        "customer_id": "401",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 128.41397775860477,
+        "allocated_budget_cost": 20.010867250452886
+      },
+      {
+        "customer_id": "402",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 295.80087985179216,
+        "allocated_budget_cost": 55.181488413252225
+      },
+      {
+        "customer_id": "403",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "404",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "405",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "406",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 37.0305250607718,
+        "allocated_budget_cost": 8.172896055830094
+      },
+      {
+        "customer_id": "407",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 82.66624888636986,
+        "allocated_budget_cost": 27.13459432070777
+      },
+      {
+        "customer_id": "408",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 231.74915595278966,
+        "allocated_budget_cost": 40.685123997515255
+      },
+      {
+        "customer_id": "409",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 85.71286865187584,
+        "allocated_budget_cost": 13.104972034309256
+      },
+      {
+        "customer_id": "410",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 24.661631374261333,
+        "allocated_budget_cost": 4.641212177592703
+      },
+      {
+        "customer_id": "411",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 92.87141190946045,
+        "allocated_budget_cost": 20.176069047866342
+      },
+      {
+        "customer_id": "412",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 145.72606901194146,
+        "allocated_budget_cost": 38.09059655688239
+      },
+      {
+        "customer_id": "413",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 214.7563346884084,
+        "allocated_budget_cost": 66.35073718760094
+      },
+      {
+        "customer_id": "414",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 38.126441722242404,
+        "allocated_budget_cost": 5.930454827486442
+      },
+      {
+        "customer_id": "415",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "416",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 108.97477852713459,
+        "allocated_budget_cost": 44.12481983634829
+      },
+      {
+        "customer_id": "417",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 111.30046158891281,
+        "allocated_budget_cost": 36.091217954323646
+      },
+      {
+        "customer_id": "418",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "419",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "420",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 85.08896227389553,
+        "allocated_budget_cost": 21.702461172310294
+      },
+      {
+        "customer_id": "421",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 32.540447252441794,
+        "allocated_budget_cost": 6.121270908023254
+      },
+      {
+        "customer_id": "422",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 255.01890382298475,
+        "allocated_budget_cost": 64.7245004247761
+      },
+      {
+        "customer_id": "423",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "424",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 213.224893388292,
+        "allocated_budget_cost": 55.535154820921335
+      },
+      {
+        "customer_id": "425",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 52.675247143752635,
+        "allocated_budget_cost": 11.008197218092247
+      },
+      {
+        "customer_id": "426",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "427",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 82.43364978760177,
+        "allocated_budget_cost": 15.239039462505357
+      },
+      {
+        "customer_id": "428",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 85.81152511887915,
+        "allocated_budget_cost": 26.338413902097685
+      },
+      {
+        "customer_id": "429",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 44.90338412027778,
+        "allocated_budget_cost": 13.895631568919754
+      },
+      {
+        "customer_id": "430",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 56.11241535778315,
+        "allocated_budget_cost": 24.881068373087018
+      },
+      {
+        "customer_id": "431",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "432",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 97.79951575023668,
+        "allocated_budget_cost": 16.720821881591405
+      },
+      {
+        "customer_id": "433",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "434",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 12.5281480119294,
+        "allocated_budget_cost": 4.294830577022489
+      },
+      {
+        "customer_id": "435",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 107.08658837987505,
+        "allocated_budget_cost": 39.32192093109723
+      },
+      {
+        "customer_id": "436",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "437",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 197.4520133236917,
+        "allocated_budget_cost": 61.64605703596574
+      },
+      {
+        "customer_id": "438",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 180.95709822803306,
+        "allocated_budget_cost": 60.12889980311479
+      },
+      {
+        "customer_id": "439",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "440",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "441",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 73.18213660267378,
+        "allocated_budget_cost": 18.834781844741535
+      },
+      {
+        "customer_id": "442",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "443",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "444",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 222.47003203214805,
+        "allocated_budget_cost": 75.08071467023868
+      },
+      {
+        "customer_id": "445",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 129.03274857908124,
+        "allocated_budget_cost": 17.093502556793748
+      },
+      {
+        "customer_id": "446",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 30.877119656433077,
+        "allocated_budget_cost": 6.583185245075424
+      },
+      {
+        "customer_id": "447",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 224.21915763935272,
+        "allocated_budget_cost": 36.959618823123826
+      },
+      {
+        "customer_id": "448",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "449",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 295.62656715500543,
+        "allocated_budget_cost": 90.18920746166728
+      },
+      {
+        "customer_id": "450",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 292.32309461476314,
+        "allocated_budget_cost": 71.66723273497368
+      },
+      {
+        "customer_id": "451",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "452",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "453",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "454",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "455",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "456",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 420.43926681697917,
+        "allocated_budget_cost": 112.54786297966437
+      },
+      {
+        "customer_id": "457",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "458",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "459",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 184.75706028315713,
+        "allocated_budget_cost": 26.431255804376693
+      },
+      {
+        "customer_id": "460",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 187.73200019154262,
+        "allocated_budget_cost": 50.139388910171405
+      },
+      {
+        "customer_id": "461",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "462",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "463",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "464",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "465",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "466",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 94.24585400109919,
+        "allocated_budget_cost": 24.592260736899963
+      },
+      {
+        "customer_id": "467",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "468",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "469",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 71.85659851276617,
+        "allocated_budget_cost": 17.90211044804033
+      },
+      {
+        "customer_id": "470",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 240.3017980834702,
+        "allocated_budget_cost": 79.88284423149669
+      },
+      {
+        "customer_id": "471",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 143.67867541123942,
+        "allocated_budget_cost": 21.398230284802075
+      },
+      {
+        "customer_id": "472",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 27.86952789597702,
+        "allocated_budget_cost": 6.9707172576830025
+      },
+      {
+        "customer_id": "473",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "474",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 27.07917433938474,
+        "allocated_budget_cost": 8.655065239928089
+      },
+      {
+        "customer_id": "475",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "476",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 251.67265635259724,
+        "allocated_budget_cost": 79.86823959473304
+      },
+      {
+        "customer_id": "477",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 61.56711168457589,
+        "allocated_budget_cost": 17.37223463161955
+      },
+      {
+        "customer_id": "478",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 103.29663871405833,
+        "allocated_budget_cost": 16.921170458634652
+      },
+      {
+        "customer_id": "479",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "480",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "481",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "482",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "483",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 10.436028130545921,
+        "allocated_budget_cost": 2.4432541121339963
+      },
+      {
+        "customer_id": "484",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 173.45100154513378,
+        "allocated_budget_cost": 44.58604218658599
+      },
+      {
+        "customer_id": "485",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 91.24608779120163,
+        "allocated_budget_cost": 25.621798643466853
+      },
+      {
+        "customer_id": "486",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 23.562486876512715,
+        "allocated_budget_cost": 6.976172745027452
+      },
+      {
+        "customer_id": "487",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "488",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 276.92213600200284,
+        "allocated_budget_cost": 36.438286105368576
+      },
+      {
+        "customer_id": "489",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "490",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 87.20223077251123,
+        "allocated_budget_cost": 17.66569635644796
+      },
+      {
+        "customer_id": "491",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "492",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 201.01569900196506,
+        "allocated_budget_cost": 31.764710473787638
+      },
+      {
+        "customer_id": "493",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 70.22116553706873,
+        "allocated_budget_cost": 11.642350817740462
+      },
+      {
+        "customer_id": "494",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 113.742354583843,
+        "allocated_budget_cost": 24.135497609675944
+      },
+      {
+        "customer_id": "495",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 101.02436669959103,
+        "allocated_budget_cost": 14.787382457873212
+      },
+      {
+        "customer_id": "496",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "497",
+        "assigned_arm": 1,
+        "discount_rate": 0.05,
+        "expected_incremental_profit": 49.71578008457755,
+        "allocated_budget_cost": 8.588388425504084
+      },
+      {
+        "customer_id": "498",
+        "assigned_arm": 0,
+        "discount_rate": 0.0,
+        "expected_incremental_profit": 0.0,
+        "allocated_budget_cost": 0.0
+      },
+      {
+        "customer_id": "499",
+        "assigned_arm": 2,
+        "discount_rate": 0.1,
+        "expected_incremental_profit": 279.6755958823414,
+        "allocated_budget_cost": 82.17237732026017
+      }
+    ],
+    "raw_solver_status": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+    "provenance": "live_optimization"
+  }
+}
