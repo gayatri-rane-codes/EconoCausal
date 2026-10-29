@@ -1,0 +1,188 @@
+{
+  "budgets_evaluated": [
+    10000.0,
+    25000.0,
+    50000.0,
+    75000.0,
+    100000.0
+  ],
+  "mode": "bounded_gap",
+  "customer_count": 6000,
+  "frontier_comparison": [
+    {
+      "budget": 10000.0,
+      "mode": "bounded_gap",
+      "causal_dml": {
+        "predicted_incremental_profit": 28075.07,
+        "predicted_spend": 9988.25,
+        "budget_utilization_pct": 99.88,
+        "solver_status": "feasible_suboptimal",
+        "is_optimal_proven": false,
+        "arm_distribution": {
+          "0": 5696,
+          "1": 269,
+          "2": 35,
+          "3": 0
+        },
+        "realized_incremental_profit": -2075.04,
+        "realized_promo_spend": 13060.74
+      },
+      "t_learner": {
+        "predicted_incremental_profit": 86548.77,
+        "predicted_spend": 9995.21,
+        "budget_utilization_pct": 99.95,
+        "solver_status": "feasible_suboptimal",
+        "is_optimal_proven": false,
+        "arm_distribution": {
+          "0": 5654,
+          "1": 346,
+          "2": 0,
+          "3": 0
+        },
+        "realized_incremental_profit": 2200.75,
+        "realized_promo_spend": 10802.41
+      },
+      "profit_delta_dml_minus_tlearner": -4275.79
+    },
+    {
+      "budget": 25000.0,
+      "mode": "bounded_gap",
+      "causal_dml": {
+        "predicted_incremental_profit": 62637.36,
+        "predicted_spend": 24998.07,
+        "budget_utilization_pct": 99.99,
+        "solver_status": "feasible_suboptimal",
+        "is_optimal_proven": false,
+        "arm_distribution": {
+          "0": 5291,
+          "1": 522,
+          "2": 187,
+          "3": 0
+        },
+        "realized_incremental_profit": -3302.14,
+        "realized_promo_spend": 31749.21
+      },
+      "t_learner": {
+        "predicted_incremental_profit": 174558.97,
+        "predicted_spend": 24994.25,
+        "budget_utilization_pct": 99.98,
+        "solver_status": "feasible_suboptimal",
+        "is_optimal_proven": false,
+        "arm_distribution": {
+          "0": 5069,
+          "1": 908,
+          "2": 23,
+          "3": 0
+        },
+        "realized_incremental_profit": 3264.84,
+        "realized_promo_spend": 27782.49
+      },
+      "profit_delta_dml_minus_tlearner": -6566.98
+    },
+    {
+      "budget": 50000.0,
+      "mode": "bounded_gap",
+      "causal_dml": {
+        "predicted_incremental_profit": 114264.38,
+        "predicted_spend": 49980.57,
+        "budget_utilization_pct": 99.96,
+        "solver_status": "feasible_suboptimal",
+        "is_optimal_proven": false,
+        "arm_distribution": {
+          "0": 4658,
+          "1": 681,
+          "2": 661,
+          "3": 0
+        },
+        "realized_incremental_profit": -750.23,
+        "realized_promo_spend": 58276.27
+      },
+      "t_learner": {
+        "predicted_incremental_profit": 275851.08,
+        "predicted_spend": 49978.49,
+        "budget_utilization_pct": 99.96,
+        "solver_status": "feasible_suboptimal",
+        "is_optimal_proven": false,
+        "arm_distribution": {
+          "0": 4404,
+          "1": 1290,
+          "2": 306,
+          "3": 0
+        },
+        "realized_incremental_profit": 8740.93,
+        "realized_promo_spend": 53832.81
+      },
+      "profit_delta_dml_minus_tlearner": -9491.16
+    },
+    {
+      "budget": 75000.0,
+      "mode": "bounded_gap",
+      "causal_dml": {
+        "predicted_incremental_profit": 161956.69,
+        "predicted_spend": 74979.98,
+        "budget_utilization_pct": 99.97,
+        "solver_status": "feasible_suboptimal",
+        "is_optimal_proven": false,
+        "arm_distribution": {
+          "0": 3893,
+          "1": 724,
+          "2": 1383,
+          "3": 0
+        },
+        "realized_incremental_profit": 5455.53,
+        "realized_promo_spend": 83404.17
+      },
+      "t_learner": {
+        "predicted_incremental_profit": 348386.94,
+        "predicted_spend": 74975.32,
+        "budget_utilization_pct": 99.97,
+        "solver_status": "feasible_suboptimal",
+        "is_optimal_proven": false,
+        "arm_distribution": {
+          "0": 3772,
+          "1": 1534,
+          "2": 693,
+          "3": 1
+        },
+        "realized_incremental_profit": 11718.65,
+        "realized_promo_spend": 81079.54
+      },
+      "profit_delta_dml_minus_tlearner": -6263.12
+    },
+    {
+      "budget": 100000.0,
+      "mode": "bounded_gap",
+      "causal_dml": {
+        "predicted_incremental_profit": 202082.01,
+        "predicted_spend": 99986.8,
+        "budget_utilization_pct": 99.99,
+        "solver_status": "feasible_suboptimal",
+        "is_optimal_proven": false,
+        "arm_distribution": {
+          "0": 3394,
+          "1": 444,
+          "2": 2114,
+          "3": 48
+        },
+        "realized_incremental_profit": 6263.22,
+        "realized_promo_spend": 106985.02
+      },
+      "t_learner": {
+        "predicted_incremental_profit": 400908.4,
+        "predicted_spend": 99953.37,
+        "budget_utilization_pct": 99.95,
+        "solver_status": "feasible_suboptimal",
+        "is_optimal_proven": false,
+        "arm_distribution": {
+          "0": 3332,
+          "1": 1650,
+          "2": 927,
+          "3": 91
+        },
+        "realized_incremental_profit": 13533.19,
+        "realized_promo_spend": 105989.4
+      },
+      "profit_delta_dml_minus_tlearner": -7269.97
+    }
+  ]
+}
