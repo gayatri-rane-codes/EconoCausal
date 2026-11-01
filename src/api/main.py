@@ -1,10 +1,12 @@
-﻿"""FastAPI Application Entry Point for EconoCausal."""
-from fastapi import FastAPI, status
-from fastapi.responses import JSONResponse
+﻿"""
+Main application factory for the EconoCausal FastAPI backend.
+"""
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from src.api.config import settings
-from src.api.schemas import HealthResponse, RootResponse, ErrorResponse
+from src.api.schemas import HealthResponse, RootResponse
+from src.api.routers.causal import router as causal_router
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -15,7 +17,7 @@ app = FastAPI(
     openapi_url=settings.OPENAPI_URL,
 )
 
-# Standard CORS Middleware for future frontend/microservice communication
+# CORS middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -24,33 +26,30 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get(
-    "/",
-    response_model=RootResponse,
-    status_code=status.HTTP_200_OK,
-    summary="Root service metadata",
-    tags=["General"]
-)
-def root() -> RootResponse:
-    """Return API metadata and reference links for documentation and health checks."""
+# Register routers
+app.include_router(causal_router)
+
+
+@app.get("/", response_model=RootResponse, tags=["Diagnostic & Info"])
+def get_root() -> RootResponse:
     return RootResponse(
         name=settings.PROJECT_NAME,
         version=settings.VERSION,
         description=settings.DESCRIPTION,
         docs_url=settings.DOCS_URL,
-        health_url="/health"
+        openapi_url=settings.OPENAPI_URL,
+        health_url="/health",
     )
 
-@app.get(
-    "/health",
-    response_model=HealthResponse,
-    status_code=status.HTTP_200_OK,
-    summary="Service health check",
-    tags=["Diagnostics"]
-)
-def health_check() -> HealthResponse:
-    """Check API operational status and internal service availability."""
+
+@app.get("/health", response_model=HealthResponse, tags=["Diagnostic & Info"])
+def get_health() -> HealthResponse:
+    services_status = {
+        "causal_engine": "ready",
+        "optimization_service": "ready",
+    }
     return HealthResponse(
         status="healthy",
-        version=settings.VERSION
+        version=settings.VERSION,
+        services=services_status,
     )
