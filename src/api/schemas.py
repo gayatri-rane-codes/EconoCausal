@@ -105,15 +105,10 @@ class OptimizationSolverSettingsSchema(BaseModel):
         gt=0.0,
         description="Solver maximum wall-clock time in seconds",
     )
-    warm_start: bool = Field(
+    allow_greedy_fallback: bool = Field(
         default=True,
-        description="Whether to use greedy heuristic solution as warm start",
+        description="Whether to fall back to greedy heuristic if MIP solver exceeds time limit",
     )
-    verbose: bool = Field(
-        default=False,
-        description="Whether to output detailed solver log",
-    )
-
 
 class OptimizationRequestSchema(BaseModel):
     model_config = ConfigDict(extra="forbid")

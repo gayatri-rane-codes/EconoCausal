@@ -86,8 +86,7 @@ def optimize_budget(
             solver_settings = SolverSettings(
                 mip_rel_gap=payload.solver_settings.mip_rel_gap,
                 time_limit=payload.solver_settings.time_limit,
-                warm_start=payload.solver_settings.warm_start,
-                verbose=payload.solver_settings.verbose,
+                allow_greedy_fallback=payload.solver_settings.allow_greedy_fallback,
             )
 
         internal_request = OptimizationRequest(
