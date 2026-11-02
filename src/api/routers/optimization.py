@@ -59,20 +59,32 @@ def _build_dataframes(
 
 
 @router.post(
-    "/optimize",
+    "/allocate",
     response_model=OptimizationResponseSchema,
     status_code=status.HTTP_200_OK,
     responses={
         422: {"model": ErrorResponse, "description": "Validation Error"},
         500: {"model": ErrorResponse, "description": "Internal Optimization Error"},
+        503: {"model": ErrorResponse, "description": "Optimization Service Unavailable"},
     },
-    summary="Solve Multi-Arm Promotional Budget Allocation",
-    description="Optimizes discount arm assignments across customers subject to a total budget constraint.",
+    summary="Allocate Multi-Arm Promotional Budget",
+    description="Allocates promotional discount arms to customers under budget constraints.",
+)
+@router.post(
+    "/optimize",
+    response_model=OptimizationResponseSchema,
+    status_code=status.HTTP_200_OK,
+    include_in_schema=False,
 )
 def optimize_budget(
     payload: OptimizationRequestSchema,
 ) -> OptimizationResponseSchema:
     try:
+        if optimization_service is None:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="Optimization service is currently unavailable.",
+            )
         if payload.candidate_profit_matrix and payload.candidate_cost_matrix:
             profit_df, cost_df = _build_dataframes(
                 payload.candidate_profit_matrix,
