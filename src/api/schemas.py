@@ -2,8 +2,8 @@
 Pydantic schemas for EconoCausal API request and response contracts.
 """
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional, Literal
-from pydantic import BaseModel, Field, ConfigDict
+from typing import Annotated, Any, Dict, List, Optional, Literal
+from pydantic import BaseModel, Field, field_validator, ConfigDict
 
 
 class HealthResponse(BaseModel):
@@ -255,6 +255,15 @@ class SensitivityScenarioResultSchema(BaseModel):
     solver_time_seconds: Optional[float] = None
 
 class SensitivityAnalysisRequestSchema(BaseModel):
+    @field_validator("budget_multipliers", "cost_multipliers")
+    @classmethod
+    def validate_multipliers(cls, values):
+        if values is not None:
+            for v in values:
+                if v < 0.0:
+                    raise ValueError(f"Multiplier values must be non-negative, got {v}")
+        return values
+
     model_config = ConfigDict(extra="forbid")
     base_budget: float = Field(..., ge=0.0)
     mode: Literal["exact", "bounded_gap", "greedy"] = "bounded_gap"
