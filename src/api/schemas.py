@@ -2,7 +2,7 @@
 Pydantic schemas for EconoCausal API request and response contracts.
 """
 from datetime import datetime, timezone
-from typing import Dict, List, Optional, Literal
+from typing import Any, Dict, List, Optional, Literal
 from pydantic import BaseModel, Field, ConfigDict
 
 
@@ -205,3 +205,99 @@ class OptimizationResponseSchema(BaseModel):
     raw_solver_status: Optional[str] = None
     provenance: str
 
+
+
+# --- Phase 4 Day 4 Schemas ---
+
+class FrontierPointSchema(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    budget: float
+    total_expected_incremental_profit: float
+    total_budget_spent: float
+    budget_remaining: float
+    is_feasible: bool
+    status: str
+    method_executed: str
+    solver_time_seconds: Optional[float] = None
+    mip_gap: Optional[float] = None
+    cache_hit: bool = False
+
+class BudgetFrontierRequestSchema(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    budgets: List[float] = Field(..., min_length=1, description="List of budget values to sweep")
+    mode: Literal["exact", "bounded_gap", "greedy"] = "bounded_gap"
+    cohort_id: Optional[str] = None
+    use_cache: bool = True
+    check_persistence: bool = True
+    solver_settings: Optional[OptimizationSolverSettingsSchema] = None
+    candidate_profit_matrix: Optional[Dict[str, Dict[str, float]]] = None
+    candidate_cost_matrix: Optional[Dict[str, Dict[str, float]]] = None
+
+class BudgetFrontierResponseSchema(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    cohort_id: Optional[str] = None
+    mode: str
+    num_points: int
+    frontier: List[FrontierPointSchema]
+
+class SensitivityScenarioResultSchema(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    scenario_name: str
+    parameter_varied: str
+    parameter_value: Any
+    total_expected_incremental_profit: float
+    total_budget_spent: float
+    budget_remaining: float
+    profit_delta: float
+    spend_delta: float
+    is_feasible: bool
+    status: str
+    solver_time_seconds: Optional[float] = None
+
+class SensitivityAnalysisRequestSchema(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    base_budget: float = Field(..., ge=0.0)
+    mode: Literal["exact", "bounded_gap", "greedy"] = "bounded_gap"
+    cohort_id: Optional[str] = None
+    budget_multipliers: List[float] = Field(default_factory=lambda: [0.8, 1.0, 1.2])
+    cost_multipliers: List[float] = Field(default_factory=lambda: [0.9, 1.0, 1.1])
+    solver_settings: Optional[OptimizationSolverSettingsSchema] = None
+    candidate_profit_matrix: Optional[Dict[str, Dict[str, float]]] = None
+    candidate_cost_matrix: Optional[Dict[str, Dict[str, float]]] = None
+
+class SensitivityAnalysisResponseSchema(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    base_budget: float
+    mode: str
+    baseline_profit: float
+    baseline_spend: float
+    scenarios: List[SensitivityScenarioResultSchema]
+
+class CohortOptimizationItemSchema(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    cohort_id: str
+    budget: float = Field(..., ge=0.0)
+    mode: Literal["exact", "bounded_gap", "greedy"] = "bounded_gap"
+    use_cache: bool = True
+    check_persistence: bool = True
+    include_allocations: bool = False
+    solver_settings: Optional[OptimizationSolverSettingsSchema] = None
+    candidate_profit_matrix: Optional[Dict[str, Dict[str, float]]] = None
+    candidate_cost_matrix: Optional[Dict[str, Dict[str, float]]] = None
+
+class MultiCohortOptimizationRequestSchema(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    cohorts: List[CohortOptimizationItemSchema] = Field(..., min_length=1)
+
+class CohortErrorSchema(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    cohort_id: str
+    error: str
+
+class MultiCohortOptimizationResponseSchema(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    total_cohorts: int
+    successful_cohorts: int
+    failed_cohorts: int
+    results: Dict[str, OptimizationResponseSchema]
+    errors: List[CohortErrorSchema]
