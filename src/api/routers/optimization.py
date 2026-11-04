@@ -21,6 +21,8 @@ from src.api.schemas import (
     OptimizationResponseSchema,
     AggregateMetricsSchema,
     CustomerAllocationItemSchema,
+    CausalOptimizationPipelineRequestSchema,
+    CausalOptimizationPipelineResponseSchema,
 )
 from src.optimization.service import OptimizationService
 from src.optimization.schemas import (
@@ -514,3 +516,96 @@ def compute_multi_cohort_optimization(
         results=results,
         errors=errors,
     )
+
+
+@router.post(
+    "/pipeline",
+    response_model=CausalOptimizationPipelineResponseSchema,
+    status_code=status.HTTP_200_OK,
+    summary="End-to-end causal inference to budget-constrained optimization pipeline",
+    responses={
+        422: {"model": ErrorResponse, "description": "Validation Error"},
+        500: {"model": ErrorResponse, "description": "Internal Solver Error"},
+        503: {"model": ErrorResponse, "description": "Causal Service Unavailable"},
+    },
+)
+def run_causal_optimization_pipeline(
+    payload: CausalOptimizationPipelineRequestSchema,
+) -> CausalOptimizationPipelineResponseSchema:
+    """
+    Executes the full end-to-end pipeline:
+    1. Runs Causal Double Machine Learning estimation over incoming customer feature records.
+    2. Constructs candidate incremental profit and promotional budget cost matrices.
+    3. Solves the constrained budget allocation using OptimizationService.
+    Strictly isolates evaluation data: no access to ground truth artifacts.
+    """
+    from src.api.causal_service import causal_service
+    from src.causal.policy import compute_candidate_policy_table
+
+    if not causal_service.is_ready:
+        try:
+            causal_service.initialize()
+        except Exception as e:
+            logger.error(f"Failed to initialize causal service: {e}")
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="Causal estimator service is currently uninitialized or unavailable.",
+            )
+
+    try:
+        # Step 1: CATE estimation
+        records = [c.model_dump() for c in payload.customers]
+        effects_df = causal_service.estimate_cate(records)
+
+        # Step 2: Build candidate policy matrices
+        features_df = pd.DataFrame(records)
+        profit_matrix, cost_matrix = compute_candidate_policy_table(
+            cate_df=effects_df,
+            econ_df=features_df,
+            spend_tail_threshold=payload.spend_tail_threshold,
+            default_baseline_prob=payload.default_baseline_prob,
+        )
+
+        # Step 3: Optimization dispatch
+        domain_settings = _map_solver_settings(payload.solver_settings)
+        domain_req = OptimizationRequest(
+            budget=payload.budget,
+            mode=payload.mode,
+            solver_settings=domain_settings,
+            cohort_id=payload.cohort_id or "cohort_default",
+        )
+
+        opt_resp = optimization_service.optimize(
+            request=domain_req,
+            candidate_profit_matrix=profit_matrix,
+            candidate_cost_matrix=cost_matrix,
+            use_cache=payload.use_cache,
+            check_persistence=payload.check_persistence,
+        )
+
+        mapped_resp = _map_domain_response_to_schema(
+            opt_resp,
+            include_allocations=payload.include_allocations,
+        )
+
+        return CausalOptimizationPipelineResponseSchema(
+            status="success",
+            cohort_id=domain_req.cohort_id,
+            total_customers=mapped_resp.metrics.cohort_size,
+            optimization_mode=mapped_resp.optimization_mode,
+            is_feasible=mapped_resp.is_feasible,
+            metrics=mapped_resp.metrics,
+            allocations=mapped_resp.allocations if payload.include_allocations else None,
+            solver_status=mapped_resp.raw_solver_status or mapped_resp.status,
+            solver_time_seconds=mapped_resp.solver_time_seconds,
+            cache_hit=mapped_resp.cache_hit,
+            provenance="causal_pipeline_dispatch",
+        )
+    except HTTPException:
+        raise
+    except Exception as exc:
+        logger.error(f"Pipeline execution failure: {exc}", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"End-to-end pipeline execution failed: {str(exc)}",
+        )

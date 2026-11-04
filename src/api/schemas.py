@@ -310,3 +310,31 @@ class MultiCohortOptimizationResponseSchema(BaseModel):
     failed_cohorts: int
     results: Dict[str, OptimizationResponseSchema]
     errors: List[CohortErrorSchema]
+
+class CausalOptimizationPipelineRequestSchema(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    customers: List[CustomerFeatureRecord] = Field(..., min_length=1)
+    budget: float = Field(..., ge=0.0)
+    mode: Literal["exact", "bounded_gap", "greedy"] = "bounded_gap"
+    cohort_id: Optional[str] = "cohort_default"
+    include_allocations: bool = True
+    use_cache: bool = True
+    check_persistence: bool = True
+    solver_settings: Optional[OptimizationSolverSettingsSchema] = None
+    default_baseline_prob: float = Field(0.23, ge=0.0, le=1.0)
+    spend_tail_threshold: float = Field(60000.0, ge=0.0)
+
+
+class CausalOptimizationPipelineResponseSchema(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    status: str
+    cohort_id: str
+    total_customers: int
+    optimization_mode: str
+    is_feasible: bool
+    metrics: AggregateMetricsSchema
+    allocations: Optional[List[CustomerAllocationItemSchema]] = None
+    solver_status: Optional[str] = None
+    solver_time_seconds: Optional[float] = None
+    cache_hit: bool = False
+    provenance: str = "pipeline_dispatch"
