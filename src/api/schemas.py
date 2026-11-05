@@ -338,3 +338,91 @@ class CausalOptimizationPipelineResponseSchema(BaseModel):
     solver_time_seconds: Optional[float] = None
     cache_hit: bool = False
     provenance: str = "pipeline_dispatch"
+
+# ============================================================================
+# Data Drift Detection Schemas (Phase 4 - Day 6)
+# ============================================================================
+
+class FeatureDriftMetricSchema(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    test_type: str = Field(..., description="Statistical test used (kolmogorov_smirnov or chi_square)")
+    statistic: float = Field(..., description="Test statistic value")
+    p_value: float = Field(..., description="P-value from two-sample test")
+    drift_detected: bool = Field(..., description="True if feature has statistically significant drift")
+    sample_size_reference: int = Field(..., ge=0, description="Clean sample count in reference dataset")
+    sample_size_current: int = Field(..., ge=0, description="Clean sample count in current dataset")
+    warning: Optional[str] = Field(default=None, description="Optional diagnostic warning or edge-case notes")
+
+
+class DataDriftRequestSchema(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    reference_data: List[CustomerFeatureRecord] = Field(
+        ..., min_length=1, description="Baseline reference customer records (e.g. training distribution)"
+    )
+    current_data: List[CustomerFeatureRecord] = Field(
+        ..., min_length=1, description="New / live candidate customer records to test for drift"
+    )
+    alpha: float = Field(
+        default=0.05, gt=0.0, lt=1.0, description="Significance level alpha for hypothesis tests (default 0.05)"
+    )
+    drift_share_threshold: float = Field(
+        default=0.3, gt=0.0, le=1.0, description="Proportion of drifted features required to flag overall dataset drift"
+    )
+
+
+class DataDriftResponseSchema(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    overall_drift_detected: bool = Field(..., description="Overall decision whether the dataset has drifted")
+    drift_share: float = Field(..., ge=0.0, le=1.0, description="Ratio of drifted features to total evaluated features")
+    drift_share_threshold: float = Field(..., description="Configured drift share threshold applied")
+    alpha_significance_level: float = Field(..., description="Significance level alpha applied")
+    total_features_evaluated: int = Field(..., ge=0, description="Total confounder features evaluated")
+    drifted_features_count: int = Field(..., ge=0, description="Number of confounder features with detected drift")
+    feature_metrics: Dict[str, FeatureDriftMetricSchema] = Field(
+        ..., description="Feature-by-feature drift metrics and test statistics"
+    )
+    summary: str = Field(..., description="Human-readable assessment summary")
+
+# ============================================================================
+# Data Drift Detection Schemas (Phase 4 - Day 6)
+# ============================================================================
+
+class FeatureDriftMetricSchema(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    test_type: str = Field(..., description="Statistical test used (kolmogorov_smirnov or chi_square)")
+    statistic: float = Field(..., description="Test statistic value")
+    p_value: float = Field(..., description="P-value from two-sample test")
+    drift_detected: bool = Field(..., description="True if feature has statistically significant drift")
+    sample_size_reference: int = Field(..., ge=0, description="Clean sample count in reference dataset")
+    sample_size_current: int = Field(..., ge=0, description="Clean sample count in current dataset")
+    warning: Optional[str] = Field(default=None, description="Optional diagnostic warning or edge-case notes")
+
+
+class DataDriftRequestSchema(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    reference_data: List[CustomerFeatureRecord] = Field(
+        ..., min_length=1, description="Baseline reference customer records (e.g. training distribution)"
+    )
+    current_data: List[CustomerFeatureRecord] = Field(
+        ..., min_length=1, description="New / live candidate customer records to test for drift"
+    )
+    alpha: float = Field(
+        default=0.05, gt=0.0, lt=1.0, description="Significance level alpha for hypothesis tests (default 0.05)"
+    )
+    drift_share_threshold: float = Field(
+        default=0.3, gt=0.0, le=1.0, description="Proportion of drifted features required to flag overall dataset drift"
+    )
+
+
+class DataDriftResponseSchema(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    overall_drift_detected: bool = Field(..., description="Overall decision whether the dataset has drifted")
+    drift_share: float = Field(..., ge=0.0, le=1.0, description="Ratio of drifted features to total evaluated features")
+    drift_share_threshold: float = Field(..., description="Configured drift share threshold applied")
+    alpha_significance_level: float = Field(..., description="Significance level alpha applied")
+    total_features_evaluated: int = Field(..., ge=0, description="Total confounder features evaluated")
+    drifted_features_count: int = Field(..., ge=0, description="Number of confounder features with detected drift")
+    feature_metrics: Dict[str, FeatureDriftMetricSchema] = Field(
+        ..., description="Feature-by-feature drift metrics and test statistics"
+    )
+    summary: str = Field(..., description="Human-readable assessment summary")
