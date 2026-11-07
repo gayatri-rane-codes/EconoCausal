@@ -194,29 +194,43 @@ export default function App() {
             {loading ? "Evaluating CATE..." : "Evaluate Discount Recommendation"}
           </button>
           {rec && (
-            <div className="grid-4">
-              <div className="metric-box">
-                <div className="metric-value">{(rec.recommended_discount * 100).toFixed(0)}%</div>
-                <div className="metric-label">Recommended Arm</div>
-              </div>
-              <div className="metric-box">
-                <div className="metric-value">${rec.expected_revenue ? rec.expected_revenue.toFixed(2) : "N/A"}</div>
-                <div className="metric-label">Expected Revenue</div>
-              </div>
-              <div className="metric-box">
-                <div className="metric-value">${rec.expected_cost ? rec.expected_cost.toFixed(2) : "N/A"}</div>
-                <div className="metric-label">Promotion Cost</div>
-              </div>
-              <div className="metric-box">
-                <div className="metric-value">${rec.expected_profit ? rec.expected_profit.toFixed(2) : "N/A"}</div>
-                <div className="metric-label">Net Uplift Profit</div>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
+          <div className="grid-4">
+            {(() => {
+              const ARMS = [0, 0.05, 0.10, 0.20];
+              const armIdx = (rec && typeof rec.recommended_arm === "number" && rec.recommended_arm >= 0 && rec.recommended_arm < 4) ? rec.recommended_arm : null;
+              const discountRate = armIdx !== null ? ARMS[armIdx] : null;
+              const baseSpend = (customer && typeof customer.historical_spend === "number") ? customer.historical_spend : 0;
+              const promoCost = discountRate !== null ? (baseSpend * discountRate) : null;
+              const expRevenue = discountRate !== null ? (baseSpend * (1 - discountRate)) : null;
+              const upliftProfit = (rec && typeof rec.expected_incremental_profit === "number") ? rec.expected_incremental_profit : ((rec && typeof rec.expected_profit === "number") ? rec.expected_profit : null);
 
-      {tab === "opt" && (
+              return (
+                <>
+                  <div className="metric-box">
+                    <div className="metric-value">{discountRate !== null ? (discountRate * 100).toFixed(0) + "%" : "Unavailable"}</div>
+                    <div className="metric-label">Recommended Arm</div>
+                  </div>
+                  <div className="metric-box">
+                    <div className="metric-value">{expRevenue !== null ? "$" + expRevenue.toFixed(2) : "Unavailable"}</div>
+                    <div className="metric-label">Expected Revenue</div>
+                  </div>
+                  <div className="metric-box">
+                    <div className="metric-value">{promoCost !== null ? "$" + promoCost.toFixed(2) : "Unavailable"}</div>
+                    <div className="metric-label">Promotion Cost</div>
+                  </div>
+                  <div className="metric-box">
+                    <div className="metric-value">{upliftProfit !== null ? "$" + upliftProfit.toFixed(2) : "Unavailable"}</div>
+                    <div className="metric-label">Net Uplift Profit</div>
+                  </div>
+                </>
+              );
+            })()}
+          </div>
+        )}
+      </div>
+    )}
+
+    {tab === "opt" && (
         <div className="card">
           <h2>Prescriptive Budget Allocation Pipeline</h2>
           <div className="grid-2" style={{ marginBottom: "16px" }}>
