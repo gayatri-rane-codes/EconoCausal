@@ -1,4 +1,4 @@
-"""
+﻿"""
 Pydantic schemas for EconoCausal API request and response contracts.
 """
 from datetime import datetime, timezone
@@ -64,7 +64,7 @@ class CATEEffect(BaseModel):
     customer_id: Optional[str] = Field(default=None)
     cate_arm_1_vs_0: float = Field(..., description="Estimated CATE uplift for 5% discount (Arm 1 vs Control 0)")
     cate_arm_2_vs_0: float = Field(..., description="Estimated CATE uplift for 10% discount (Arm 2 vs Control 0)")
-    cate_arm_3_vs_0: float = Field(..., description="Estimated CATE uplift for 20% discount (Arm 3 vs Control 0)")
+    cate_arm_3_vs_0: float = Field(..., description="Estimated CATE uplift for 15% discount (Arm 3 vs Control 0)")
 
 
 class CATEEstimateResponse(BaseModel):
@@ -79,7 +79,7 @@ class PolicyRecommendation(BaseModel):
     cate_arm_1_vs_0: float
     cate_arm_2_vs_0: float
     cate_arm_3_vs_0: float
-    recommended_arm: int = Field(..., ge=0, le=3, description="Optimal discount arm: 0 (0%), 1 (5%), 2 (10%), 3 (20%)")
+    recommended_arm: int = Field(..., ge=0, le=3, description="Optimal discount arm: 0 (0%), 1 (5%), 2 (10%), 3 (15%)")
     expected_incremental_profit: float = Field(..., description="Estimated incremental expected profit from recommendation")
 
 
@@ -426,3 +426,4 @@ class DataDriftResponseSchema(BaseModel):
         ..., description="Feature-by-feature drift metrics and test statistics"
     )
     summary: str = Field(..., description="Human-readable assessment summary")
+

@@ -52,9 +52,12 @@ class CausalService:
 
         econ_df = pd.DataFrame(index=df.index)
         econ_df["historical_spend"] = df["historical_spend"]
-        econ_df["basket_value"] = df["basket_value"] if "basket_value" in df.columns else 100.0
+        bv_col = "basket_value_before_discount" if "basket_value_before_discount" in df.columns else ("basket_value" if "basket_value" in df.columns else None)
+        bv_vals = df[bv_col] if bv_col is not None else 100.0
+        econ_df["basket_value_before_discount"] = bv_vals
+        econ_df["basket_value"] = bv_vals
         econ_df["cost_of_goods"] = (
-            df["cost_of_goods"] if "cost_of_goods" in df.columns else econ_df["basket_value"] * 0.70
+            df["cost_of_goods"] if "cost_of_goods" in df.columns else bv_vals * 0.70
         )
         econ_df["baseline_purchase_prob"] = (
             df["baseline_purchase_prob"] if "baseline_purchase_prob" in df.columns else 0.35

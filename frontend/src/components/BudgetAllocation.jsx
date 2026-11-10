@@ -1,9 +1,12 @@
-﻿import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
 
-export default function BudgetAllocation() {
-  const [budget, setBudget] = useState(500);
+export default function BudgetAllocation({ cohortData, optimizationResult, setOptimizationResult }) {
+  const [budget, setBudget] = useState(() => {
+    const saved = localStorage.getItem("econocausal_budget");
+    return saved !== null ? Number(saved) : 500;
+  });
   const [solverMode, setSolverMode] = useState("bounded_gap");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -13,12 +16,38 @@ export default function BudgetAllocation() {
     setLoading(true);
     setError(null);
     try {
-      const payload = {
-        budget: Number(budget),
-        mode: solverMode,
-        cohort_id: "default",
-        include_allocations: true,
-      };
+    let candidate_profit_matrix = null;
+    let candidate_cost_matrix = null;
+
+    if (cohortData?.preview && Array.isArray(cohortData.preview)) {
+      candidate_profit_matrix = {};
+      candidate_cost_matrix = {};
+      cohortData.preview.forEach((row, idx) => {
+        const cid = row.customer_id || `cust_${idx}`;
+        const profit = Number(row.expected_incremental_profit ?? row.profit ?? 0);
+        candidate_profit_matrix[cid] = {
+          arm_0: 0.0,
+          arm_1: profit * 0.4,
+          arm_2: profit * 0.7,
+          arm_3: profit,
+        };
+        candidate_cost_matrix[cid] = {
+          arm_0: 0.0,
+          arm_1: 5.0,
+          arm_2: 10.0,
+          arm_3: 15.0,
+        };
+      });
+    }
+
+    const payload = {
+      budget: Number(budget),
+      mode: solverMode,
+      cohort_id: candidate_profit_matrix ? "uploaded_cohort" : "default",
+      include_allocations: true,
+      candidate_profit_matrix,
+      candidate_cost_matrix,
+    };
 
       // Try /optimization/optimize then fallback to /optimize if mounted at root
       let res = await fetch(`${API_BASE}/optimization/optimize`, {
@@ -131,7 +160,11 @@ export default function BudgetAllocation() {
             <input
               type="number"
               value={budget}
-              onChange={(e) => setBudget(Number(e.target.value))}
+              onChange={(e) => {
+                const val = Number(e.target.value);
+                setBudget(val);
+                localStorage.setItem("econocausal_budget", val);
+              }}
               style={{
                 width: "100%",
                 background: "var(--bg-card)",
@@ -327,4 +360,5 @@ export default function BudgetAllocation() {
     </div>
   );
 }
+
 

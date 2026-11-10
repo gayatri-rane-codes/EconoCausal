@@ -79,8 +79,8 @@ export default function CATERecommendations({
   }, []);
 
   const optimalArm = cateResult?.optimal_policy ?? 2;
-  const armLabels = ["0% Discount", "5% Discount", "10% Discount", "20% Discount"];
-  const armSubsidies = ["0%", "5%", "10%", "20%"];
+  const armLabels = ["0% Discount", "5% Discount", "10% Discount", "15% Discount"];
+  const armSubsidies = ["0%", "5%", "10%", "15%"];
 
   const armsData = [
     {
@@ -118,11 +118,11 @@ export default function CATERecommendations({
     },
     {
       id: 3,
-      name: "Arm 3 (20% Discount)",
-      armLabel: "20% Discount",
+      name: "Arm 3 (15% Discount)",
+      armLabel: "15% Discount",
       uplift: cateResult?.cate_estimates?.treatment_3 ?? -0.1213,
       ci: "95% CI: -0.171 to -0.071",
-      subsidy: "20%",
+      subsidy: "15%",
       status: "Alternative",
       desc: "High subsidy cost exceeds additional conversion elasticity.",
       isOptimal: optimalArm === 3,
@@ -302,4 +302,5 @@ export default function CATERecommendations({
     </div>
   );
 }
+
 

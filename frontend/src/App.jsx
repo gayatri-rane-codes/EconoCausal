@@ -1,4 +1,4 @@
-ï»¿import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import ExecutiveOverview from "./components/ExecutiveOverview";
 import CustomerConfounders from "./components/CustomerConfounders";
@@ -82,7 +82,7 @@ export default function App() {
 
         <div className="sidebar-footer">
           <div>EconoCausal Enterprise</div>
-          <div>DML Â· HiGHS MILP Â· SciPy</div>
+          <div>DML · HiGHS MILP · SciPy</div>
           <div>API: {API_BASE}</div>
         </div>
       </aside>
@@ -138,7 +138,7 @@ export default function App() {
           )}
 
           {activeTab === "budget" && (
-            <BudgetAllocation
+            <BudgetAllocation cohortData={cohortData}
               optimizationResult={optimizationResult}
               setOptimizationResult={setOptimizationResult}
             />

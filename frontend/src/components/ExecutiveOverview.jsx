@@ -1,4 +1,4 @@
-﻿import React, { useState } from "react";
+import React, { useState } from "react";
 
 export default function ExecutiveOverview({
   cohortData,
@@ -31,6 +31,90 @@ export default function ExecutiveOverview({
     { from: "recency", to: "treatment" },
     { from: "treatment", to: "outcome" },
   ];
+  // --- Dynamic Counterfactual & Spend Path Generation ---
+  const allocations = optimizationResult?.allocations || [];
+  
+  // 1. Calculate actual spend from cohortData distribution or backend property
+  let calculatedSpend = Number(cohortData?.total_budget_spent ?? optimizationResult?.metrics?.total_budget_spent ?? 0);
+  if (!calculatedSpend && cohortData?.distribution) {
+    const costMap = { "15%": 15, "10%": 10, "5%": 5, "0%": 0 };
+    Object.entries(cohortData.distribution).forEach(([tier, count]) => {
+      for (const [key, cost] of Object.entries(costMap)) {
+        if (tier.includes(key)) {
+          calculatedSpend += cost * count;
+          break;
+        }
+      }
+    });
+  }
+  if (!calculatedSpend && allocations.length > 0) {
+    calculatedSpend = allocations.reduce((acc, a) => acc + Number(a.allocated_budget_cost || 0), 0);
+  }
+
+  const totalSpend = calculatedSpend;
+  const totalUplift = Number(cohortData?.total_incremental_profit ?? optimizationResult?.metrics?.total_expected_incremental_profit ?? 0);
+
+  // 2. Build smooth continuous curves scaled to real values
+  let spendPoints = [];
+  let upliftPoints = [];
+
+  const maxBudget = Number(cohortData?.budget_cap ?? (totalSpend > 0 ? totalSpend : 1000));
+  const effectiveSpend = totalSpend > 0 ? totalSpend : maxBudget;
+  const effectiveUplift = totalUplift > 0 ? totalUplift : 1000;
+
+  // Generate 8 parametric points representing cumulative trajectory across budget
+  const steps = 8;
+  for (let i = 0; i <= steps; i++) {
+    const t = i / steps; // 0.0 to 1.0
+    const xVal = t * effectiveSpend;
+    
+    // Spend scales linearly
+    const ySpend = t * effectiveSpend;
+    // Diminishing returns curve for profit uplift
+    const yUplift = Math.sin((t * Math.PI) / 2) * effectiveUplift;
+    
+    spendPoints.push({ x: xVal, y: ySpend });
+    upliftPoints.push({ x: xVal, y: yUplift });
+  }
+
+  const maxSpendX = Math.max(...spendPoints.map((p) => p.x), 100);
+  const maxUpliftY = Math.max(...upliftPoints.map((p) => p.y), totalUplift || 1, 100);
+
+  const formatShort = (val) => {
+    if (val >= 1000000) return `$${(val / 1000000).toFixed(1)}M`;
+    if (val >= 1000) return `$${(val / 1000).toFixed(1)}k`;
+    return `$${Math.round(val)}`;
+  };
+
+  const yTicks = [
+    { y: 35, label: formatShort(maxUpliftY) },
+    { y: 90, label: formatShort(maxUpliftY * 0.66) },
+    { y: 145, label: formatShort(maxUpliftY * 0.33) },
+    { y: 200, label: "$0" },
+  ];
+
+  const xTicks = [
+    { x: 40, label: "$0" },
+    { x: 150, label: formatShort(maxSpendX * 0.25) },
+    { x: 260, label: formatShort(maxSpendX * 0.5) },
+    { x: 370, label: formatShort(maxSpendX * 0.75) },
+    { x: 470, label: formatShort(maxSpendX) },
+  ];
+
+
+
+  const factualSpendPath = spendPoints.map((p, idx) => {
+    const px = 40 + (p.x / maxSpendX) * 440;
+    const py = 200 - (p.y / maxSpendX) * 160;
+    return `${idx === 0 ? 'M' : 'L'} ${px.toFixed(1)} ${py.toFixed(1)}`;
+  }).join(' ');
+
+  const upliftPath = upliftPoints.map((p, idx) => {
+    const px = 40 + (p.x / maxSpendX) * 440;
+    const py = 200 - (p.y / maxUpliftY) * 160;
+    return `${idx === 0 ? 'M' : 'L'} ${px.toFixed(1)} ${py.toFixed(1)}`;
+  }).join(' ');
+
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
@@ -40,7 +124,7 @@ export default function ExecutiveOverview({
         </div>
         <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
           <span className={`badge ${isHealthy ? "badge-healthy" : "badge-critical"}`}>
-            ● Backend: {backendHealth}
+            ? Backend: {backendHealth}
           </span>
           <button className="btn btn-secondary" onClick={() => window.location.reload()}>
             Refresh
@@ -153,27 +237,24 @@ export default function ExecutiveOverview({
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px" }}>
             <h3>Counterfactual & Spend Impact</h3>
             <div style={{ display: "flex", gap: "12px", fontSize: "11px" }}>
-              <span style={{ color: "#38BDF8" }}>◆ Factual Spend ($0.00)</span>
-              <span style={{ color: "#8B5CF6" }}>◆ Counterfactual Revenue Uplift</span>
+              <span style={{ color: "#38BDF8" }}>? Factual Spend (${totalSpend.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })})</span>
+              <span style={{ color: "#8B5CF6" }}>? Counterfactual Uplift (${totalUplift.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })})</span>
             </div>
           </div>
           <div style={{ height: "260px", background: "rgba(10, 15, 30, 0.4)", borderRadius: "8px", position: "relative" }}>
             <svg width="100%" height="100%" viewBox="0 0 500 240">
               <line x1="40" y1="210" x2="480" y2="210" stroke="#1f293d" strokeWidth="1" />
               <line x1="40" y1="20" x2="40" y2="210" stroke="#1f293d" strokeWidth="1" />
-              <text x="35" y="25" fill="#64748b" fontSize="10" textAnchor="end">$30</text>
-              <text x="35" y="85" fill="#64748b" fontSize="10" textAnchor="end">$25</text>
-              <text x="35" y="145" fill="#64748b" fontSize="10" textAnchor="end">$20</text>
-              <text x="35" y="205" fill="#64748b" fontSize="10" textAnchor="end">$15</text>
-              <text x="40" y="225" fill="#64748b" fontSize="10" textAnchor="middle">0</text>
-              <text x="130" y="225" fill="#64748b" fontSize="10" textAnchor="middle">100</text>
-              <text x="240" y="225" fill="#64748b" fontSize="10" textAnchor="middle">200</text>
-              <text x="360" y="225" fill="#64748b" fontSize="10" textAnchor="middle">300</text>
-              <text x="470" y="225" fill="#64748b" fontSize="10" textAnchor="middle">500</text>
-              <path d="M 40 200 C 100 170, 180 185, 260 175 C 340 165, 420 170, 480 175" fill="none" stroke="#38BDF8" strokeWidth="2.5" />
-              <path d="M 40 200 C 90 130, 150 140, 260 100 C 370 60, 430 50, 480 60" fill="none" stroke="#8B5CF6" strokeWidth="2.5" />
+              {yTicks.map((t, i) => (
+            <text key={`ytick-${i}`} x="35" y={t.y} fill="#64748b" fontSize="10" textAnchor="end">{t.label}</text>
+          ))}
+          {xTicks.map((t, i) => (
+            <text key={`xtick-${i}`} x={t.x} y="222" fill="#64748b" fontSize="10" textAnchor="middle">{t.label}</text>
+          ))}
+              <path d={factualSpendPath} fill="none" stroke="#38BDF8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+              <path d={upliftPath} fill="none" stroke="#8B5CF6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
-            <div style={{ position: "absolute", bottom: "10px", left: "16px", fontSize: "11px", color: "#64748b" }}>
+            <div style={{ position: "absolute", top: "12px", left: "16px", fontSize: "11px", color: "#64748b" }}>
               View Spend projection / CATE estimation
             </div>
             <div style={{ position: "absolute", bottom: "10px", right: "16px" }}>
@@ -246,3 +327,4 @@ export default function ExecutiveOverview({
     </div>
   );
 }
+

@@ -13,7 +13,7 @@ ARM_DISCOUNTS = {
     0: 0.00,
     1: 0.05,
     2: 0.10,
-    3: 0.20
+    3: 0.15
 }
 
 
@@ -200,3 +200,4 @@ def assign_discount_policy(
         "expected_incremental_profit": recom_profits,
         "assignment_reason": recom_reasons,
     }, index=cate_df.index)
+

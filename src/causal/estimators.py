@@ -1,6 +1,6 @@
 ﻿"""
 Estimator module for CATE estimation using Double Machine Learning (LinearDML).
-Handles multi-arm discrete treatments (0%, 5%, 10%, 20% discounts) and binary purchase outcomes.
+Handles multi-arm discrete treatments (0%, 5%, 10%, 15% discounts) and binary purchase outcomes.
 Includes StandardScaler pipeline in nuisance model_t to ensure stable convergence.
 """
 
@@ -294,4 +294,5 @@ class TLearnerEstimator:
         return pd.DataFrame(effects, index=df.index)
 
     estimate_effects = predict_cate
+
 
