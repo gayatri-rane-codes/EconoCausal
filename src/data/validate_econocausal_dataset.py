@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Validation for the EconoCausal synthetic dataset.  Reads the deliverable files from disk, computes every
 check, and writes dataset_validation_report.md.  Nothing in the report is hand-typed except the
@@ -40,7 +40,7 @@ G = importlib.import_module("generate_econocausal_dataset")
 SEED_CV = 7
 NOTES = """The first complete validation run of the first generator draft failed 3 of 66 checks, and calibration review before that led to two parameter retunes. Everything below was fixed and the generator and validator were re-run from scratch; the report above reflects only the final run.
 
-1. **Effect calibration (before the first validation run).** The first draft gave 42% of customers a negative true purchase effect at 20% and made "no discount" profit-optimal for 71% of customers. `BETA_INTERCEPT` and `KAPPA_BASE` were retuned (0.30/0.08 -> 0.55/0.05 -> 0.45/0.04). Final shares are in section 6.
+1. **Effect calibration (before the first validation run).** The first draft gave 42% of customers a negative true purchase effect at 15% and made "no discount" profit-optimal for 71% of customers. `BETA_INTERCEPT` and `KAPPA_BASE` were retuned (0.30/0.08 -> 0.55/0.05 -> 0.45/0.04). Final shares are in section 6.
 2. **Overlap (real DGP weakness).** With the first targeting strength, 10.3% of customers had at least one arm propensity below 0.05 (the 'any arm < 0.05' check failed). `TARGETING_GAMMA` was reduced from [0, .50, .85, 1.15] to [0, .45, .75, .95] and `SCORE_CLIP` from 2.2 to 2.0. Minimum true propensity rose to 0.042 and the share of customers with any propensity below 0.05 fell to 1.4%. Confounding remains strong (section 5).
 3. **Validator bug, list-price conservation check.** The tolerance ignored that ground-truth probabilities are stored rounded to 6 decimals (error up to ~INR 0.0075 on a INR 15,000 basket). The tolerance now scales with basket value. No data changed.
 4. **IPW recovery criterion changed.** The first draft used an arbitrary absolute threshold (0.015) and failed with a maximum error of 0.0194 under the earlier, sharper targeting (large inverse-propensity weights). A fixed absolute threshold is not a meaningful test, so the criterion was replaced by "within 3 standard errors" (Hajek SE reported in section 5). This was a change of criterion made after seeing a failure; the DGP overlap fix in item 2 was applied independently and separately reduced the weights.
@@ -331,23 +331,23 @@ def main():
     het = pd.DataFrame({f"ITE purchase {G.ARM_PCT[k]}%": pd.Series(ite[k]).describe(percentiles=[.05, .5, .95]) for k in (1, 2, 3)}).T
     het["share<0"] = [(ite[k] < 0).mean() for k in (1, 2, 3)]
     het["share<-0.01"] = [(ite[k] < -0.01).mean() for k in (1, 2, 3)]
-    prof_tbl = pd.DataFrame({f"Δ profit {G.ARM_PCT[k]}%": pd.Series(prof[k]).describe(percentiles=[.05, .5, .95]) for k in (1, 2, 3)}).T
+    prof_tbl = pd.DataFrame({f"Î” profit {G.ARM_PCT[k]}%": pd.Series(prof[k]).describe(percentiles=[.05, .5, .95]) for k in (1, 2, 3)}).T
     prof_tbl["share>0"] = [(prof[k] > 0).mean() for k in (1, 2, 3)]
     seg_het = g.assign(segment=m.customer_segment.values).groupby("segment")[
         ["true_ite_purchase_arm1", "true_ite_purchase_arm2", "true_ite_purchase_arm3", "true_incr_net_profit_arm1", "true_incr_net_profit_arm2", "true_incr_net_profit_arm3"]].mean()
     cmp_het = g.assign(c=m.campaign_type.values, l=m.loyalty_member.values)
     camp_het = cmp_het.groupby("c")[["true_ite_purchase_arm2"]].mean().rename(columns={"true_ite_purchase_arm2": "mean ITE purchase @10%"})
     loy_het = cmp_het.groupby("l")[["true_ite_purchase_arm2"]].mean().rename(columns={"true_ite_purchase_arm2": "mean ITE purchase @10%"})
-    nonmono = pd.Series({"share p(20%) < p(10%)": (pk[:, 3] < pk[:, 2]).mean(), "share p(10%) < p(5%)": (pk[:, 2] < pk[:, 1]).mean(),
+    nonmono = pd.Series({"share p(15%) < p(10%)": (pk[:, 3] < pk[:, 2]).mean(), "share p(10%) < p(5%)": (pk[:, 2] < pk[:, 1]).mean(),
                          "share p(5%) < p(0%)": (pk[:, 1] < pk[:, 0]).mean()}, name="share of customers")
     best = g.oracle_best_arm_by_expected_profit.value_counts(normalize=True).sort_index()
     best.index = [f"arm{k} ({G.ARM_PCT[k]}%)" for k in best.index]
     sd10 = ite[2].std()
     chk("6 Heterogeneity", "true ITE has meaningful dispersion (sd of ITE@10% > 0.04)", sd10 > 0.04, f"sd={sd10:.4f}")
-    chk("6 Heterogeneity", "segment-level mean ITE@20% spans > 0.10", seg_het.true_ite_purchase_arm3.max() - seg_het.true_ite_purchase_arm3.min() > 0.10,
+    chk("6 Heterogeneity", "segment-level mean ITE@15% spans > 0.10", seg_het.true_ite_purchase_arm3.max() - seg_het.true_ite_purchase_arm3.min() > 0.10,
         f"range={seg_het.true_ite_purchase_arm3.max() - seg_het.true_ite_purchase_arm3.min():.3f}")
-    chk("6 Heterogeneity", "some customers respond weakly/negatively (share ITE@20%<0 between 2% and 40%)", 0.02 < (ite[3] < 0).mean() < 0.40, f"{(ite[3] < 0).mean():.3f}")
-    chk("6 Heterogeneity", "purchase response is not forced monotone (some customers have p(20%) < p(10%))", (pk[:, 3] < pk[:, 2]).mean() > 0.01)
+    chk("6 Heterogeneity", "some customers respond weakly/negatively (share ITE@15%<0 between 2% and 40%)", 0.02 < (ite[3] < 0).mean() < 0.40, f"{(ite[3] < 0).mean():.3f}")
+    chk("6 Heterogeneity", "purchase response is not forced monotone (some customers have p(15%) < p(10%))", (pk[:, 3] < pk[:, 2]).mean() > 0.01)
     chk("6 Heterogeneity", "profit-optimal arm is mixed (>=3 arms each chosen by >=3% of customers)", (g.oracle_best_arm_by_expected_profit.value_counts(normalize=True) >= 0.03).sum() >= 3,
         str(best.round(3).to_dict()))
     Xc = as_cat(m)
@@ -358,7 +358,7 @@ def main():
             mdl = HistGradientBoostingRegressor(random_state=SEED_CV, max_depth=4, learning_rate=0.08, max_iter=200, categorical_features="from_dtype").fit(Xc.iloc[tr], ite[k][tr])
             pred[te] = mdl.predict(Xc.iloc[te])
         cv_r2[k] = 1 - ((ite[k] - pred) ** 2).sum() / ((ite[k] - ite[k].mean()) ** 2).sum()
-    chk("6 Heterogeneity", "true ITE@20% is learnable from observed covariates (CV R² > 0.5) but not perfectly (< 0.999)", 0.5 < cv_r2[3] < 0.999, f"R²={cv_r2[3]:.3f}")
+    chk("6 Heterogeneity", "true ITE@15% is learnable from observed covariates (CV RÂ² > 0.5) but not perfectly (< 0.999)", 0.5 < cv_r2[3] < 0.999, f"RÂ²={cv_r2[3]:.3f}")
 
     # ---------------------------------------------------------------- 7 leakage
     gt_only = set(g.columns) - {"customer_id"}
@@ -397,8 +397,8 @@ def main():
         ok_run = r.returncode == 0
         h1 = (sha256(os.path.join(td, "econocausal_synthetic_dataset.csv")), sha256(os.path.join(td, "ground_truth_evaluation.csv"))) if ok_run else ("", "")
     h0 = (sha256(p_main), sha256(p_gt))
-    chk("8 Reproducibility", "fresh-process regeneration gives byte-identical main CSV (SHA-256)", ok_run and h1[0] == h0[0], h0[0][:16] + "…")
-    chk("8 Reproducibility", "fresh-process regeneration gives byte-identical ground-truth CSV (SHA-256)", ok_run and h1[1] == h0[1], h0[1][:16] + "…")
+    chk("8 Reproducibility", "fresh-process regeneration gives byte-identical main CSV (SHA-256)", ok_run and h1[0] == h0[0], h0[0][:16] + "â€¦")
+    chk("8 Reproducibility", "fresh-process regeneration gives byte-identical ground-truth CSV (SHA-256)", ok_run and h1[1] == h0[1], h0[1][:16] + "â€¦")
 
     # ---------------------------------------------------------------- 9 downstream smoke tests (sklearn / scipy)
     ds = []
@@ -447,7 +447,7 @@ def main():
     dr = pd.DataFrame(rows_dr).set_index("arm")
     chk("9 Downstream", "orthogonal DR/DML-style ATE within 0.02 of truth for every arm", ((dr["DR/DML ATE"] - dr["true ATE"]).abs() < 0.02).all(),
         f"max err={((dr['DR/DML ATE'] - dr['true ATE']).abs()).max():.4f}")
-    chk("9 Downstream", "estimated CATE rank-correlates with true ITE (Spearman > 0.5, arm 20%)", dr["CATE corr (Spearman)"].iloc[-1] > 0.5, f"{dr['CATE corr (Spearman)'].iloc[-1]:.3f}")
+    chk("9 Downstream", "estimated CATE rank-correlates with true ITE (Spearman > 0.5, arm 15%)", dr["CATE corr (Spearman)"].iloc[-1] > 0.5, f"{dr['CATE corr (Spearman)'].iloc[-1]:.3f}")
     # --- 9b PSM
     Xs = StandardScaler().fit_transform(Xbal)
     psm_rows = []
@@ -553,9 +553,9 @@ def main():
     chk("9 Downstream", "structured allocation never exceeds oracle gain (sanity)", all(r["structured gain"] <= r["oracle gain"] + 1 for r in lrows))
     treat_all = {k: (dp_true[:, k].sum(), sp_true[:, k].sum()) for k in (1, 2, 3)}
     pol = pd.DataFrame({"policy": ["no discount (0%)"] + [f"everyone {G.ARM_PCT[k]}%" for k in (1, 2, 3)] + ["oracle unconstrained (best arm per customer)"],
-                        "expected Δ net profit vs 0% (INR, all 20k)": [0.0] + [treat_all[k][0] for k in (1, 2, 3)] + [full_gain],
-                        "expected Δ promo spend (INR)": [0.0] + [treat_all[k][1] for k in (1, 2, 3)] + [full_spend]}).set_index("policy")
-    pol["ROI = Δprofit / Δspend"] = pol.iloc[:, 0] / pol.iloc[:, 1].replace(0, np.nan)
+                        "expected Î” net profit vs 0% (INR, all 20k)": [0.0] + [treat_all[k][0] for k in (1, 2, 3)] + [full_gain],
+                        "expected Î” promo spend (INR)": [0.0] + [treat_all[k][1] for k in (1, 2, 3)] + [full_spend]}).set_index("policy")
+    pol["ROI = Î”profit / Î”spend"] = pol.iloc[:, 0] / pol.iloc[:, 1].replace(0, np.nan)
     # --- 9e library probe
     probe = {}
     for lib in ("dowhy", "econml"):
@@ -567,7 +567,7 @@ def main():
 
     # ---------------------------------------------------------------- report
     n_pass = sum(c[2] for c in checks)
-    out.append("# Dataset Validation Report — EconoCausal (Dynamic Pricing via DML)\n")
+    out.append("# Dataset Validation Report â€” EconoCausal (Dynamic Pricing via DML)\n")
     out.append("All numbers below were computed by `validate_econocausal_dataset.py` from the files on disk "
                f"(`econocausal_synthetic_dataset.csv`, `ground_truth_evaluation.csv`); runtime {time.time() - t0:.0f}s. "
                "Findings validate the **simulation assumptions** of a synthetic data-generating process, not real-world causal truth.\n")
@@ -575,14 +575,14 @@ def main():
     out.append(f"- Generator seed: `{G.SEED}`; main CSV SHA-256 `{h0[0]}`; ground-truth CSV SHA-256 `{h0[1]}`")
     out.append(f"- DoWhy: {probe['dowhy']}")
     out.append(f"- EconML: {probe['econml']}")
-    out.append("- Downstream smoke tests in §9 use scikit-learn and SciPy re-implementations of the relevant estimators (cross-fitted doubly-robust/DML-style learner, PSM, Qini, LP). "
+    out.append("- Downstream smoke tests in Â§9 use scikit-learn and SciPy re-implementations of the relevant estimators (cross-fitted doubly-robust/DML-style learner, PSM, Qini, LP). "
                "They show the data are *suitable* for these workflows; they do **not** certify DoWhy/EconML runs.\n")
     out.append("## Check summary\n")
     out.append("| Section | Check | Result | Detail |\n|---|---|---|---|")
     for s, nme, ok, d in checks:
         out.append(f"| {s} | {nme} | {'PASS' if ok else '**FAIL**'} | {d} |")
     out.append("\n## 1. Structure\n")
-    out.append(f"Main file: {m.shape[0]:,} rows × {m.shape[1]} columns. Ground-truth file: {g.shape[0]:,} rows × {g.shape[1]} columns.\n")
+    out.append(f"Main file: {m.shape[0]:,} rows Ã— {m.shape[1]} columns. Ground-truth file: {g.shape[0]:,} rows Ã— {g.shape[1]} columns.\n")
     out.append(md(dtypes_tbl, "{:.0f}"))
     out.append("\n## 2. Treatment counts and outcome distributions\n")
     out.append(md(cnt, "{:.4f}"))
@@ -602,14 +602,14 @@ def main():
     out.append("\nCustomers per segment and arm:\n")
     out.append(md(seg_cnt, "{:.0f}"))
     out.append("\n## 5. Confounding\n")
-    out.append(f"Correlation of assignment score with baseline purchase probability P(Y(0)=1): {corr_sb:.3f}; with true effect size β: {corr_se:.3f}.\n")
+    out.append(f"Correlation of assignment score with baseline purchase probability P(Y(0)=1): {corr_sb:.3f}; with true effect size Î²: {corr_se:.3f}.\n")
     out.append("Mean covariates by observed arm (differences = confounding):\n")
     out.append(md(cov_by_arm, "{:.3f}"))
     out.append("\nCovariate balance (standardized mean differences, arm k vs 0, all one-hot/numeric covariates):\n")
     out.append(md(bal, "{:.3f}"))
-    out.append("\nMost imbalanced covariates (arm 20% vs 0%):\n")
+    out.append("\nMost imbalanced covariates (arm 15% vs 0%):\n")
     out.append(md(top_imb, "{:.3f}"))
-    out.append("\nEffect recovery — naive vs adjusted estimators (truth from ground-truth file):\n")
+    out.append("\nEffect recovery â€” naive vs adjusted estimators (truth from ground-truth file):\n")
     out.append(md(rec.set_index(["outcome", "arm"]), "{:.4f}"))
     out.append("\n## 6. Heterogeneous ground-truth effects\n")
     out.append(md(het[["mean", "std", "min", "5%", "50%", "95%", "max", "share<0", "share<-0.01"]], "{:.4f}"))
@@ -621,13 +621,13 @@ def main():
     out.append(md(nonmono.to_frame(), "{:.4f}"))
     out.append("\nProfit-optimal arm (oracle, expected net profit):\n")
     out.append(md(best.rename("share").to_frame(), "{:.4f}"))
-    out.append(f"\nCV R² of a gradient-boosted model predicting the true ITE@20% from observed covariates: {cv_r2[3]:.3f}.\n")
+    out.append(f"\nCV RÂ² of a gradient-boosted model predicting the true ITE@15% from observed covariates: {cv_r2[3]:.3f}.\n")
     out.append("\n## 7. Leakage\n")
     out.append("Largest |Pearson r| between numeric covariates and treatment/outcomes:\n")
     out.append(md(mx.rename("|r|").to_frame(), "{:.3f}"))
     out.append(f"\nCovariate-only cross-validated AUC for `purchased`: {auc_p:.3f}. Treatment re-draw test: {diff_arm:.1%} of customers received a different arm; covariates and ground truth were unchanged.\n")
     out.append("\n## 8. Reproducibility\n")
-    out.append(f"Fresh-process regeneration SHA-256 — main: `{h1[0]}`; ground truth: `{h1[1]}`. Deliverable files — main: `{h0[0]}`; ground truth: `{h0[1]}`.\n")
+    out.append(f"Fresh-process regeneration SHA-256 â€” main: `{h1[0]}`; ground truth: `{h1[1]}`. Deliverable files â€” main: `{h0[0]}`; ground truth: `{h0[1]}`.\n")
     out.append("\n## 9. Downstream compatibility smoke tests (scikit-learn / SciPy)\n")
     out.append("### 9a Cross-fitted doubly-robust (orthogonal / DML-style) ATE and CATE for purchase\n")
     out.append(md(dr, "{:.4f}"))
@@ -638,14 +638,14 @@ def main():
     out.append(md(qdf, "{:.3f}"))
     out.append("\n### 9d SciPy LP budget optimisation\n")
     out.append("Objective: maximise expected incremental net profit vs 0% discount. Budget: expected incremental promotional spend = expected redeemed discount value + marketing/coupon cost. "
-               "Gains/spend are evaluated with ground-truth expectations. 'structured' = cross-fitted purchase-probability models × unit economics (COGS ratio by category, channel/coupon cost) estimated from observed columns; "
+               "Gains/spend are evaluated with ground-truth expectations. 'structured' = cross-fitted purchase-probability models Ã— unit economics (COGS ratio by category, channel/coupon cost) estimated from observed columns; "
                "'generic DR' = doubly-robust CATE of realised net profit and spend (noisier, because realised profit is a heavy-tailed single draw). 'best random gain' = best of randomly giving one uniform discount level to a budget-sized random subset.\n")
     lpf = lpd.copy()
     for c_ in lpf.columns:
         lpf[c_] = [f"{x:.3f}" if "ROI" in c_ else f"{x:,.0f}" for x in lpf[c_]]
     out.append(md(lpf, "{}"))
     out.append("\nReference policies (whole population):\n")
-    out.append(md(pol.assign(**{"ROI = Δprofit / Δspend": pol["ROI = Δprofit / Δspend"].map(lambda x: "n/a" if pd.isna(x) else f"{x:.3f}")}), "{:,.2f}"))
+    out.append(md(pol.assign(**{"ROI = Î”profit / Î”spend": pol["ROI = Î”profit / Î”spend"].map(lambda x: "n/a" if pd.isna(x) else f"{x:.3f}")}), "{:,.2f}"))
     out.append("\n## 10. Fixes made during validation\n")
     out.append(NOTES)
     out.append("\n## 11. Limitations of this validation\n")
@@ -662,3 +662,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

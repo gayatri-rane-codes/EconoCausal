@@ -1,0 +1,9 @@
+sample_size,mode,elapsed_seconds,total_incremental_profit,budget_allocated,budget_spent,budget_utilization_pct,is_feasible,solver_status
+100,greedy,0.0106,1509.24,800.0,799.47,99.93,True,success
+100,bounded_gap,0.0372,1529.58,800.0,798.87,99.86,True,feasible_suboptimal
+1000,greedy,0.0541,15653.45,8000.0,7995.11,99.94,True,success
+1000,bounded_gap,0.2019,15760.26,8000.0,7992.5,99.91,True,feasible_suboptimal
+5000,greedy,0.2555,79170.4,40000.0,39998.87,100.0,True,success
+5000,bounded_gap,1.6532,79884.75,40000.0,39998.34,100.0,True,feasible_suboptimal
+20000,greedy,1.231,316172.5,160000.0,159996.13,100.0,True,success
+20000,bounded_gap,30.5473,319232.7,160000.0,159994.02,100.0,True,feasible_suboptimal

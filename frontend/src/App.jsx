@@ -1,40 +1,165 @@
-ï»¿import React, { useState } from 'react';
-import Header from './components/Header';
-import BudgetInput from './components/BudgetInput';
-import DataUpload from './components/DataUpload';
-import DataSummary from './components/DataSummary';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import ExecutiveOverview from "./components/ExecutiveOverview";
+import CustomerConfounders from "./components/CustomerConfounders";
+import CATERecommendations from "./components/CATERecommendations";
+import BudgetAllocation from "./components/BudgetAllocation";
+import DriftObservability from "./components/DriftObservability";
+import DataUpload from "./components/DataUpload";
+
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
+
+const DEFAULT_CONFOUNDERS = {
+  browsing_frequency: 28,
+  cart_abandonment_rate: 0.12,
+  competitor_price_index: 0.95,
+  historical_spend: 420.0,
+  loyalty_member: 1,
+  previous_discount_response_rate: 0.65,
+  recency_days: 4,
+  seasonality_index: 1.25,
+};
 
 export default function App() {
-  const [budget, setBudget] = useState('5000');
-  const [budgetError, setBudgetError] = useState('');
-  const [fileInfo, setFileInfo] = useState(null);
-  const [uploadError, setUploadError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState("overview");
+  const [backendHealth, setBackendHealth] = useState("CHECKING");
+  const [confounders, setConfounders] = useState(DEFAULT_CONFOUNDERS);
+  const [cateResult, setCateResult] = useState(null);
+  const [optimizationResult, setOptimizationResult] = useState(null);
+  const [driftResult, setDriftResult] = useState(null);
+  const [cohortData, setCohortData] = useState(null);
+
+  const checkHealth = async () => {
+    try {
+      const res = await axios.get(`${API_BASE}/health`);
+      if (res.data?.status === "healthy" || res.data?.status === "ok") {
+        setBackendHealth("HEALTHY");
+      } else {
+        setBackendHealth("UNHEALTHY");
+      }
+    } catch {
+      setBackendHealth("DOWN");
+    }
+  };
+
+  useEffect(() => {
+    checkHealth();
+    const interval = setInterval(checkHealth, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const navItems = [
+    { id: "overview", label: "Executive Overview", tag: "SYS" },
+    { id: "confounders", label: "Customer Confounders", tag: "INP" },
+    { id: "batch", label: "Cohort Batch Upload", tag: "BAT" },
+    { id: "cate", label: "CATE Recommendations", tag: "INF" },
+    { id: "budget", label: "Budget Allocation", tag: "OPT" },
+    { id: "drift", label: "Drift & Observability", tag: "OBS" },
+  ];
 
   return (
     <div className="app-container">
-      <Header />
-      <main className="main-content">
-        <BudgetInput
-          budget={budget}
-          setBudget={setBudget}
-          budgetError={budgetError}
-          setBudgetError={setBudgetError}
-        />
-        <DataUpload
-          fileInfo={fileInfo}
-          setFileInfo={setFileInfo}
-          uploadError={uploadError}
-          setUploadError={setUploadError}
-          isLoading={isLoading}
-          setIsLoading={setIsLoading}
-        />
-        <DataSummary fileInfo={fileInfo} />
+      <aside className="sidebar">
+        <div className="brand">
+          <div className="brand-logo">E</div>
+          <div className="brand-text">
+            <h1>EconoCausal</h1>
+            <span>Analytics Suite</span>
+          </div>
+        </div>
+
+        <nav className="nav-links">
+          {navItems.map((item) => (
+            <button
+              key={item.id}
+              className={`nav-item ${activeTab === item.id ? "active" : ""}`}
+              onClick={() => setActiveTab(item.id)}
+            >
+              <span>{item.label}</span>
+            </button>
+          ))}
+        </nav>
+
+        <div className="sidebar-footer">
+          <div>EconoCausal Enterprise</div>
+          <div>DML · HiGHS MILP · SciPy</div>
+          <div>API: {API_BASE}</div>
+        </div>
+      </aside>
+
+      <div className="main-wrapper">
+        <header className="top-bar">
+          <div className="top-bar-title">
+            {navItems.find((n) => n.id === activeTab)?.label}
+          </div>
+          <div className="top-bar-actions">
+            <div className="health-badge">
+              <span
+                className={`status-dot ${
+                  backendHealth === "HEALTHY"
+                    ? "healthy"
+                    : backendHealth === "DOWN"
+                    ? "down"
+                    : ""
+                }`}
+              />
+              <span>Backend: {backendHealth}</span>
+            </div>
+            <button className="btn-secondary" onClick={checkHealth}>
+              Refresh
+            </button>
+          </div>
+        </header>
+
+        <main className="content-area">
+          {activeTab === "overview" && (
+            <ExecutiveOverview backendHealth={backendHealth} cohortData={cohortData}
+              optimizationResult={optimizationResult}
+              driftResult={driftResult}
+              setActiveTab={setActiveTab}
+            />
+          )}
+
+          {activeTab === "confounders" && (
+            <CustomerConfounders
+              confounders={confounders}
+              setConfounders={setConfounders}
+              onEvaluate={() => setActiveTab("cate")}
+            />
+          )}
+
+          {activeTab === "cate" && (
+            <CATERecommendations
+              confounders={confounders}
+              cateResult={cateResult}
+              setCateResult={setCateResult}
+              onEditConfounders={() => setActiveTab("confounders")}
+            />
+          )}
+
+          {activeTab === "budget" && (
+            <BudgetAllocation cohortData={cohortData}
+              optimizationResult={optimizationResult}
+              setOptimizationResult={setOptimizationResult}
+            />
+          )}
+
+          {activeTab === "drift" && (
+            <DriftObservability
+              driftResult={driftResult}
+              setDriftResult={setDriftResult}
+            />
+          )}
+                <div style={{ display: activeTab === "batch" ? "block" : "none" }}>
+          <DataUpload cohortData={cohortData} setCohortData={setCohortData} />
+        </div>
       </main>
-      <footer className="app-footer">
-        <p>EconoCausal Â· Phase 1 Foundation Â· Client-Side Inspection Only</p>
-      </footer>
+      </div>
     </div>
   );
 }
+
+
+
+
+
