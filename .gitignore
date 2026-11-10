@@ -32,3 +32,13 @@ reports/*.html
 data/**/*.csv
 *.csv
 frontend/dist/
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Environment configurations
+*.env
+frontend/.env

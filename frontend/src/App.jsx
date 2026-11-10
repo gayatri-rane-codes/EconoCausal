@@ -5,8 +5,9 @@ import CustomerConfounders from "./components/CustomerConfounders";
 import CATERecommendations from "./components/CATERecommendations";
 import BudgetAllocation from "./components/BudgetAllocation";
 import DriftObservability from "./components/DriftObservability";
+import DataUpload from "./components/DataUpload";
 
-const API_BASE = "http://localhost:8000";
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
 
 const DEFAULT_CONFOUNDERS = {
   browsing_frequency: 28,
@@ -26,6 +27,7 @@ export default function App() {
   const [cateResult, setCateResult] = useState(null);
   const [optimizationResult, setOptimizationResult] = useState(null);
   const [driftResult, setDriftResult] = useState(null);
+  const [cohortData, setCohortData] = useState(null);
 
   const checkHealth = async () => {
     try {
@@ -49,6 +51,7 @@ export default function App() {
   const navItems = [
     { id: "overview", label: "Executive Overview", tag: "SYS" },
     { id: "confounders", label: "Customer Confounders", tag: "INP" },
+    { id: "batch", label: "Cohort Batch Upload", tag: "BAT" },
     { id: "cate", label: "CATE Recommendations", tag: "INF" },
     { id: "budget", label: "Budget Allocation", tag: "OPT" },
     { id: "drift", label: "Drift & Observability", tag: "OBS" },
@@ -110,8 +113,7 @@ export default function App() {
 
         <main className="content-area">
           {activeTab === "overview" && (
-            <ExecutiveOverview
-              backendHealth={backendHealth}
+            <ExecutiveOverview backendHealth={backendHealth} cohortData={cohortData}
               optimizationResult={optimizationResult}
               driftResult={driftResult}
               setActiveTab={setActiveTab}
@@ -148,8 +150,16 @@ export default function App() {
               setDriftResult={setDriftResult}
             />
           )}
-        </main>
+                <div style={{ display: activeTab === "batch" ? "block" : "none" }}>
+          <DataUpload cohortData={cohortData} setCohortData={setCohortData} />
+        </div>
+      </main>
       </div>
     </div>
   );
 }
+
+
+
+
+

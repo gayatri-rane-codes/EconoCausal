@@ -1,4 +1,4 @@
-﻿"""
+"""
 Causal estimation singleton service for EconoCausal API.
 Strictly isolates observational data from ground-truth evaluation datasets.
 """
@@ -40,13 +40,13 @@ class CausalService:
 
     def estimate_cate(self, records: List[Dict[str, Any]]) -> pd.DataFrame:
         if not self.is_ready:
-            raise RuntimeError("Causal estimator is not initialized.")
+            self.initialize()
         df = pd.DataFrame(records)
         return self._estimator.estimate_effects(df)
 
     def predict_policy(self, records: List[Dict[str, Any]]) -> pd.DataFrame:
         if not self.is_ready:
-            raise RuntimeError("Causal estimator is not initialized.")
+            self.initialize()
         df = pd.DataFrame(records)
         cate_df = self._estimator.estimate_effects(df)
 
@@ -74,3 +74,4 @@ class CausalService:
 
 
 causal_service = CausalService()
+

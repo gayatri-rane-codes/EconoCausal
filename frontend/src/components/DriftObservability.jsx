@@ -1,6 +1,6 @@
 ﻿import React, { useState, useEffect } from "react";
 
-const API_BASE = "http://localhost:8000";
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
 
 const DEFAULT_REFERENCE = [
   { customer_id: "ref_01", browsing_frequency: 12.4, cart_abandonment_rate: 0.28, competitor_price_index: 1.02, historical_spend: 380.0, loyalty_member: 1, previous_discount_response_rate: 0.42, recency_days: 14.0, seasonality_index: 1.05, basket_value: 95.0, baseline_purchase_prob: 0.32 },
@@ -246,3 +246,4 @@ export default function DriftObservability() {
     </div>
   );
 }
+
