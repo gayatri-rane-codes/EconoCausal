@@ -1,1 +1,43 @@
-# EconoCausal – Dynamic Pricing via Double Machine Learning`n`nEconoCausal is an end-to-end causal machine learning and prescriptive optimization platform for e-commerce promotional discount allocation combining ForestDML and SciPy HiGHS MILP.`n`n## Workflow`n1. Customer Ingestion (8 Confounders)`n2. CATE Uplift Estimation (ForestDML)`n3. Policy Matrix Construction`n4. Prescriptive Optimization (SciPy HiGHS MILP / Greedy)`n5. Non-Parametric Data Drift Monitoring (KS & Chi-Square)`n6. React 19 Experimentation Dashboard`n`n## API Endpoints (10 Routes)`n- GET /`n- GET /health`n- POST /causal/estimate`n- POST /causal/predict`n- POST /optimization/allocate`n- POST /optimization/frontier`n- POST /optimization/sensitivity`n- POST /optimization/multi-cohort`n- POST /optimization/pipeline`n- POST /monitoring/data-drift`n`n## Setup & Run`n- Backend: .venv\Scripts\python.exe -m uvicorn src.api.main:app --port 8000`n- Frontend: cd frontend; npm run dev`n- Tests: .venv\Scripts\python.exe -m pytest -v`n
+# EconoCausal â€“ Dynamic Pricing via Double Machine Learning
+
+EconoCausal is an end-to-end causal machine learning and prescriptive optimization platform for e-commerce promotional discount allocation, combining ForestDML and SciPy HiGHS MILP.
+
+## Workflow
+
+1. Customer Ingestion (8 Confounders)
+2. CATE Uplift Estimation (ForestDML)
+3. Policy Matrix Construction
+4. Prescriptive Optimization (SciPy HiGHS MILP / Greedy)
+5. Non-Parametric Data Drift Monitoring (KS & Chi-Square)
+6. React 19 Experimentation Dashboard
+
+## API Endpoints (10 Routes)
+
+- `GET /`
+- `GET /health`
+- `POST /causal/estimate`
+- `POST /causal/predict`
+- `POST /optimization/allocate`
+- `POST /optimization/frontier`
+- `POST /optimization/sensitivity`
+- `POST /optimization/multi-cohort`
+- `POST /optimization/pipeline`
+- `POST /monitoring/data-drift`
+
+## Setup & Run
+
+**Backend**
+```bash
+.venv\Scripts\python.exe -m uvicorn src.api.main:app --port 8000
+```
+
+**Frontend**
+```bash
+cd frontend
+npm run dev
+```
+
+**Tests**
+```bash
+.venv\Scripts\python.exe -m pytest -v
+```
